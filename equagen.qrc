@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file alias="list-add.svg">extlib/tango-icon-theme-0.8.90/scalable/actions/list-add.svg</file>
+        <file alias="media-playback-start.svg">extlib/tango-icon-theme-0.8.90/scalable/actions/media-playback-start.svg</file>
+        <file alias="edit-copy.svg">extlib/tango-icon-theme-0.8.90/scalable/actions/edit-copy.svg</file>
+        <file alias="dialog-error.svg">extlib/tango-icon-theme-0.8.90/scalable/status/dialog-error.svg</file>
+        <file alias="go-next.svg">extlib/tango-icon-theme-0.8.90/scalable/actions/go-next.svg</file>
+        <file alias="edit-redo.svg">extlib/tango-icon-theme-0.8.90/scalable/actions/edit-redo.svg</file>
+        <file alias="edit-logout.svg">extlib/tango-icon-theme-0.8.90/scalable/actions/system-log-out.svg</file>
+        <file alias="preferences-system.svg">extlib/tango-icon-theme-0.8.90/scalable/categories/preferences-system.svg</file>
+    </qresource>
+    <qresource prefix="/templates">
+        <file alias="equation.template">templates/equation.template</file>
+    </qresource>
+</RCC>

@@ -1,0 +1,19 @@
+\documentclass[12pt]{article}
+\pagestyle{empty}
+
+\usepackage{ulem}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage[usenames]{color}
+\usepackage{cancel}
+\usepackage{color}
+
+\begin{document}
+
+% No empty lines allowed in math block !
+\begin{eqnarray*}
+[% equation -%]
+\end{eqnarray*}
+
+\end{document}
+
