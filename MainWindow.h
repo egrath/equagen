@@ -24,6 +24,7 @@ private:
     QLabel *m_StatusLabel;
 
     void setupUserInterface();
+    void setupToolbar();
     void addDocumentTab( const QString &name );
     void addAdderTab();
 
@@ -40,6 +41,10 @@ private slots:
 
     void menuFileQuitPressed( bool checked );
     void menuEditOptionsPressed( bool checked );
+
+    void menuViewZoomInPressed( bool checked );
+    void menuViewZoomOutPressed( bool checked );
+    void menuViewZoomOriginalPressed( bool checked );
 
 public:
     MainWindow();

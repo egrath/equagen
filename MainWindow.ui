@@ -125,10 +125,33 @@
     </property>
     <addaction name="actionEditOptions"/>
    </widget>
+   <widget class="QMenu" name="menu_View">
+    <property name="title">
+     <string>&amp;View</string>
+    </property>
+    <addaction name="actionViewZoomIn"/>
+    <addaction name="actionViewZoomOut"/>
+    <addaction name="actionViewNormalSize"/>
+   </widget>
    <addaction name="menu_File"/>
    <addaction name="menu_Edit"/>
+   <addaction name="menu_View"/>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
+  <widget class="QToolBar" name="toolBar">
+   <property name="windowTitle">
+    <string>toolBar</string>
+   </property>
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+   <addaction name="actionViewZoomIn"/>
+   <addaction name="actionViewZoomOut"/>
+   <addaction name="actionViewNormalSize"/>
+  </widget>
   <action name="actionFileQuit">
    <property name="icon">
     <iconset resource="equagen.qrc">
@@ -166,6 +189,42 @@
   <action name="actionButtonCopyClipboard">
    <property name="text">
     <string>actionButtonCopyClipboard</string>
+   </property>
+  </action>
+  <action name="actionViewZoomIn">
+   <property name="icon">
+    <iconset resource="equagen.qrc">
+     <normaloff>:/icons/zoom-in</normaloff>:/icons/zoom-in</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom In</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionViewZoomOut">
+   <property name="icon">
+    <iconset resource="equagen.qrc">
+     <normaloff>:/icons/zoom-out</normaloff>:/icons/zoom-out</iconset>
+   </property>
+   <property name="text">
+    <string>Zoom Out</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionViewNormalSize">
+   <property name="icon">
+    <iconset resource="equagen.qrc">
+     <normaloff>:/icons/zoom-original</normaloff>:/icons/zoom-original</iconset>
+   </property>
+   <property name="text">
+    <string>Normal Size</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
  </widget>

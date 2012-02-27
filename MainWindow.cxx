@@ -20,6 +20,39 @@ void MainWindow::setupUserInterface()
 
     // Connect File->Quit
     QObject::connect( m_UserInterface->actionFileQuit, SIGNAL( triggered( bool )), this, SLOT( menuFileQuitPressed(bool)));
+
+    // Connect View Items
+    QObject::connect( m_UserInterface->actionViewZoomIn, SIGNAL( triggered( bool )), this, SLOT( menuViewZoomInPressed(bool)));
+    QObject::connect( m_UserInterface->actionViewZoomOut, SIGNAL(triggered(bool)), this, SLOT(menuViewZoomOutPressed(bool)));
+    QObject::connect( m_UserInterface->actionViewNormalSize, SIGNAL( triggered(bool)),this,SLOT(menuViewZoomOriginalPressed(bool)));
+
+    // Build the Toolbar
+    setupToolbar();
+}
+
+// Create the toolbar (we can't create it in the designer)
+void MainWindow::setupToolbar()
+{
+    // TODO: Implement, currently only non-functional
+
+    // Add Template selector
+    QLabel *templateSelectorLabel = new QLabel( "Template" );
+    QComboBox *templateSelectorComboBox = new QComboBox();
+    templateSelectorComboBox->addItem( "Built-in Template" );
+    templateSelectorComboBox->setCurrentIndex( 0 );
+    m_UserInterface->toolBar->addSeparator();
+    m_UserInterface->toolBar->addWidget( templateSelectorLabel );
+    m_UserInterface->toolBar->addWidget( templateSelectorComboBox );
+
+    // Add PNG/SVG Copy Mode selector
+    QLabel *copySelectorLabel = new QLabel( "Clipboard type" );
+    QComboBox *copySelectorComboBox = new QComboBox();
+    copySelectorComboBox->addItem( "PNG" );
+    copySelectorComboBox->addItem( "SVG" );
+    copySelectorComboBox->setCurrentIndex( 1 );
+    m_UserInterface->toolBar->addSeparator();
+    m_UserInterface->toolBar->addWidget( copySelectorLabel );
+    m_UserInterface->toolBar->addWidget( copySelectorComboBox );
 }
 
 // Insert a new Document Editor Tab
@@ -118,6 +151,21 @@ void MainWindow::menuEditOptionsPressed( bool checked )
 
     if( m_Settings->valid() )
         setStatusMessage( false );
+}
+
+void MainWindow::menuViewZoomInPressed( bool checked )
+{
+    qDebug() << "Preview zoom in";
+}
+
+void MainWindow::menuViewZoomOutPressed( bool checked )
+{
+    qDebug() << "Preview zoom out";
+}
+
+void MainWindow::menuViewZoomOriginalPressed( bool checked )
+{
+    qDebug() << "Preview zoom normal";
 }
 
 // Check the currently active Document Editor for his status

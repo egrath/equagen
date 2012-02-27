@@ -8,6 +8,9 @@
         <file alias="edit-redo.svg">extlib/tango-icon-theme-0.8.90/scalable/actions/edit-redo.svg</file>
         <file alias="edit-logout.svg">extlib/tango-icon-theme-0.8.90/scalable/actions/system-log-out.svg</file>
         <file alias="preferences-system.svg">extlib/tango-icon-theme-0.8.90/scalable/categories/preferences-system.svg</file>
+        <file alias="zoom-in">extlib/gnome-icon-theme/scalable/actions/zoom-in-symbolic.svg</file>
+        <file alias="zoom-out">extlib/gnome-icon-theme/scalable/actions/zoom-out-symbolic.svg</file>
+        <file alias="zoom-original">extlib/gnome-icon-theme/scalable/actions/zoom-original-symbolic.svg</file>
     </qresource>
     <qresource prefix="/templates">
         <file alias="equation.template">templates/equation.template</file>

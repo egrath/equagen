@@ -1,8 +1,9 @@
 #ifndef DOCUMENTEDITOR_H
 #define DOCUMENTEDITOR_H
 
-#include <QClipboard>
+#include "ClipboardManager.h"
 #include "Document.h"
+
 #include "ui_DocumentEditor.h"
 
 class DocumentEditor : public QWidget
@@ -17,6 +18,8 @@ private:
     bool m_IsModified;
     bool m_CanCompile;
     bool m_HasError;
+
+    ClipboardCopyType m_ClipboardCopyType;
 
     void setupUserInterface();
 
@@ -41,6 +44,12 @@ public:
     // Document Name getter/setter
     void setName( const QString &name );
     const QString & name() const;
+
+    // Template used by the contained Document
+    void setTexTemplate( const QString &templ );
+
+    // Type of Image for Clipboard copy
+    void setClipboardCopyMode( ClipboardCopyType type );
 
 signals:
     void documentStatusChanged();

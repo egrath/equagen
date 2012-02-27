@@ -36,7 +36,8 @@ HEADERS += \
     ErrorLog.h \
     BaseImage.h \
     SettingsDialog.h \
-    SettingsProvider.h
+    SettingsProvider.h \
+    ClipboardManager.h
 
 FORMS += \
     MainWindow.ui \

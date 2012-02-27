@@ -142,3 +142,15 @@ const QString & DocumentEditor::name() const
 {
     return m_Document->name();
 }
+
+// Set the template used to compile the LaTeX code
+void DocumentEditor::setTexTemplate( const QString &templ )
+{
+    m_Document->setTexTemplate( templ );
+}
+
+// Set the Clipboard Copy Type
+void DocumentEditor::setClipboardCopyMode( ClipboardCopyType type )
+{
+    m_ClipboardCopyType = type;
+}
