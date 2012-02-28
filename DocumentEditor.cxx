@@ -143,6 +143,11 @@ const QString & DocumentEditor::name() const
     return m_Document->name();
 }
 
+const QUuid & DocumentEditor::uuid() const
+{
+    return m_Document->uuid();
+}
+
 // Set the template used to compile the LaTeX code
 void DocumentEditor::setTexTemplate( const QString &templ )
 {

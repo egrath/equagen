@@ -45,6 +45,9 @@ public:
     void setName( const QString &name );
     const QString & name() const;
 
+    // Document UUID getter
+    const QUuid & uuid() const;
+
     // Template used by the contained Document
     void setTexTemplate( const QString &templ );
 

@@ -8,7 +8,11 @@ Document::Document( const QString &name, const QString &initial )
     m_Svg = 0;
     m_Png = 0;
     m_Valid = false;
-    m_Settings = SettingsProvider::getInstance();        
+    m_Settings = SettingsProvider::getInstance();
+
+    // Generate a uuid for this document
+    m_Uuid = QUuid::createUuid();
+    qDebug() << "Document with Name: " << name << " has the UUID: " << m_Uuid.toString();
 }
 
 Document::~Document()
@@ -170,6 +174,11 @@ const PngImage & Document::pngImage() const
 const SvgImage & Document::svgImage() const
 {
     return *m_Svg;
+}
+
+const QUuid & Document::uuid() const
+{
+    return m_Uuid;
 }
 
 bool Document::valid() const

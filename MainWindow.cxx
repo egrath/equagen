@@ -14,6 +14,7 @@ void MainWindow::setupUserInterface()
     QObject::connect( m_UserInterface->actionButtonErrorLog,SIGNAL(triggered(bool)),this,SLOT(buttonErrorLogPressed(bool)));
     QObject::connect( m_UserInterface->actionButtonCopyClipboard,SIGNAL(triggered(bool)),this,SLOT(buttonCopyClipboardPressed(bool)));
     QObject::connect( m_UserInterface->tabWidget, SIGNAL(currentChanged(int)),this,SLOT(tabWidgetIndexChanged(int)));
+    QObject::connect( m_UserInterface->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(tabCloseRequested(int)));
 
     // Connect Edit->Options dialog
     QObject::connect( m_UserInterface->actionEditOptions, SIGNAL( triggered( bool )), this, SLOT( menuEditOptionsPressed(bool)));
@@ -78,9 +79,11 @@ void MainWindow::addDocumentTab( const QString &name )
 void MainWindow::addAdderTab()
 {
     QTabWidget *tw = m_UserInterface->tabWidget;
-    QLabel *label = new QLabel( "You are not supposed to see me!" );
+    QPushButton *addTabButton = new QPushButton( QIcon( ":/icons/list-add.svg" ), "" );
 
-    tw->addTab( label, QIcon( ":/icons/list-add.svg" ), "" );
+    QObject::connect( addTabButton, SIGNAL( clicked() ), this, SLOT( buttonAddDocumentEditorTabButtonPressed()) );
+
+    tw->setCornerWidget( addTabButton, Qt::TopLeftCorner );
 }
 
 void MainWindow::buttonCompilePressed( bool checked )
@@ -109,6 +112,14 @@ void MainWindow::buttonCopyClipboardPressed( bool checked )
     m_ActiveDocument->copyImageToClipboard();
 }
 
+void MainWindow::buttonAddDocumentEditorTabButtonPressed()
+{
+    qDebug() << "Add Document Editor Tab Button pressed";
+
+    QString documentName = QString( "Untitled-%1" ).arg( m_UserInterface->tabWidget->count() +1);
+    addDocumentTab( documentName );
+}
+
 // The active document has changed it's status, so we need to (eventually)
 // change the button states.
 void MainWindow::activeDocumentStatusChanged()
@@ -117,19 +128,16 @@ void MainWindow::activeDocumentStatusChanged()
     checkActiveDocumentStatus();
 }
 
+void MainWindow::tabCloseRequested( int index )
+{
+    qDebug() << "Close requested";
+}
+
 void MainWindow::tabWidgetIndexChanged( int index )
 {
     qDebug() << "Tab index changed to: " << index;
 
-    // Check if the user has changed to the Adder tab
-    if( index >= m_Documents.count() )
-    {
-        qDebug() << "MainWindow::tabWidgetIndexChanged - adding a new tab!";
-        addDocumentTab( QString( "Untitled-%1" ).arg( m_Documents.count() +1 ));
-        return;
-    }
-
-    m_ActiveDocument = m_Documents.at( index );
+    m_ActiveDocument = ( DocumentEditor * ) m_UserInterface->tabWidget->currentWidget();
 
     // Connect to the active document's change status signal
     QObject::connect( m_ActiveDocument, SIGNAL(documentStatusChanged()), this, SLOT(activeDocumentStatusChanged()));

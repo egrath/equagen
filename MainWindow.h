@@ -1,5 +1,3 @@
-#pragma GCC diagnostic ignored "-Wunused-parameter"
-
 #ifndef EQUATIONEDITOR_H
 #define EQUATIONEDITOR_H
 
@@ -35,8 +33,10 @@ private slots:
     void buttonCompilePressed( bool checked );
     void buttonErrorLogPressed( bool checked );
     void buttonCopyClipboardPressed( bool checked );
+    void buttonAddDocumentEditorTabButtonPressed();
 
     void tabWidgetIndexChanged( int index );
+    void tabCloseRequested( int index );
     void activeDocumentStatusChanged();
 
     void menuFileQuitPressed( bool checked );

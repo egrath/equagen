@@ -8,6 +8,7 @@
 #include <QFile>
 #include <QDir>
 #include <QProcess>
+#include <QUuid>
 
 #include "SettingsProvider.h"
 #include "SvgImage.h"
@@ -22,6 +23,8 @@ private:
 
     SvgImage *m_Svg;
     PngImage *m_Png;
+
+    QUuid m_Uuid;
 
     SettingsProvider *m_Settings;
 
@@ -51,6 +54,9 @@ public:
     // Get SVG/PNG Documents
     const SvgImage & svgImage() const;
     const PngImage & pngImage() const;
+
+    // Get UUID of document
+    const QUuid & uuid() const;
 
     // Is the current document valid? (i.e. have the PNG/SVN's generated)
     bool valid() const;
