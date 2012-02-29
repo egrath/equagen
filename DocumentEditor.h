@@ -1,8 +1,11 @@
 #ifndef DOCUMENTEDITOR_H
 #define DOCUMENTEDITOR_H
 
+#include <QWheelEvent>
+
 #include "ClipboardManager.h"
 #include "Document.h"
+#include "SettingsProvider.h"
 
 #include "ui_DocumentEditor.h"
 
@@ -12,8 +15,10 @@ class DocumentEditor : public QWidget
 
 private:
     Ui_DocumentEditor *m_UserInterface;
+    PreviewScrollArea *m_PreviewScrollArea;
     Renderer *m_Renderer;
     Document *m_Document;
+    SettingsProvider *m_Settings;
 
     bool m_IsModified;
     bool m_CanCompile;
@@ -25,6 +30,7 @@ private:
 
 private slots:
     void textEditorTextChanged();
+    void previewScrollerMouseWheelEvent( QWheelEvent *event );
 
 public:
     DocumentEditor( const QString &name = "", const QString &initialContent = "", QWidget *parent = 0 );
@@ -53,6 +59,11 @@ public:
 
     // Type of Image for Clipboard copy
     void setClipboardCopyMode( ClipboardCopyType type );
+
+    // Zoom operations
+    qreal zoomIn();
+    qreal zoomOut();
+    qreal zoomNormal();
 
 signals:
     void documentStatusChanged();

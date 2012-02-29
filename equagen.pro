@@ -23,7 +23,8 @@ SOURCES += \
     ErrorLog.cxx \
     BaseImage.cxx \
     SettingsDialog.cxx \
-    SettingsProvider.cxx
+    SettingsProvider.cxx \
+    PreviewScrollArea.cxx
 
 HEADERS += \
     Document.h \
@@ -37,7 +38,8 @@ HEADERS += \
     BaseImage.h \
     SettingsDialog.h \
     SettingsProvider.h \
-    ClipboardManager.h
+    ClipboardManager.h \
+    PreviewScrollArea.h
 
 FORMS += \
     MainWindow.ui \

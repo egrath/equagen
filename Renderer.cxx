@@ -1,6 +1,6 @@
 #include "Renderer.h"
 
-Renderer::Renderer()
+void Renderer::init()
 {
     m_Settings = SettingsProvider::getInstance();
 
@@ -8,8 +8,14 @@ Renderer::Renderer()
     setScale( m_Settings->previewScale() );
 }
 
+Renderer::Renderer()
+{
+    init();
+}
+
 Renderer::Renderer( const SvgImage &image )
 {
+    init();
     setImage( image );
 }
 
@@ -22,8 +28,17 @@ void Renderer::setImage( const SvgImage &image )
     m_Renderer.load( *( image.rawContent() ));
 
     // Set scale again from configuration (in case someone changed our settings)
-    setScale( m_Settings->previewScale() );
+    setScale( m_Scale );
+}
 
+// Set the scale of our rendering - per default we use 1.0, but this is user
+// configurable
+void Renderer::setScale( const qreal &scale )
+{
+    qDebug() << "Renderer::setScale: to " << scale;
+    m_Scale = scale;
+
+    // Set new size of our rendering
     this->setMinimumSize( m_Renderer.viewBoxF().width() * m_Scale + 16, m_Renderer.viewBoxF().height() * m_Scale + 16 );
     this->setMaximumSize( m_Renderer.viewBoxF().width() * m_Scale + 16, m_Renderer.viewBoxF().height() * m_Scale + 16 );
     this->resize( m_Renderer.viewBoxF().width() * m_Scale + 4, m_Renderer.viewBoxF().height() * m_Scale + 4 );
@@ -32,12 +47,9 @@ void Renderer::setImage( const SvgImage &image )
     qDebug() << "    final rendering size is: " << m_Renderer.viewBoxF().width() * m_Scale << " x " << m_Renderer.viewBoxF().height() * m_Scale;
     qDebug() << "    minimum widget size: " << this->minimumSize();
     qDebug() << "    maximum widget size: " << this->maximumSize();
-}
 
-void Renderer::setScale( const qreal &scale )
-{
-    qDebug() << "Renderer::setScale: to " << scale;
-    m_Scale = scale;
+    // Redraw
+    repaint();
 }
 
 const qreal & Renderer::scale() const

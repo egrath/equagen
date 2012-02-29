@@ -16,6 +16,7 @@ private:
     SettingsProvider *m_Settings;
 
 public:
+    void init();
     Renderer();
     Renderer( const SvgImage &image );
     ~Renderer();

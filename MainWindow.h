@@ -15,16 +15,19 @@ class MainWindow : public QMainWindow
 
 private:
     Ui_MainWindow *m_UserInterface;
-    QList<DocumentEditor *> m_Documents;
     DocumentEditor *m_ActiveDocument;
     ErrorLog *m_ErrorLog;
     SettingsProvider *m_Settings;
     QLabel *m_StatusLabel;
 
+    int m_TabCounter;
+
     void setupUserInterface();
     void setupToolbar();
     void addDocumentTab( const QString &name );
     void addAdderTab();
+
+    QString generateEmptyTabName();
 
     void checkActiveDocumentStatus();
     void setStatusMessage( bool enabled, const QString &message = "", const QColor & color = QColor( 0, 0, 0 ));

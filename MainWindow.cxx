@@ -65,15 +65,17 @@ void MainWindow::addDocumentTab( const QString &name )
 
     // Build Tab content
     DocumentEditor *editor = new DocumentEditor( name );
-    m_Documents.append( editor );
 
     // Append to Tab Widget
-    int tabIndex = m_Documents.count() -1;
+    int tabIndex = tw->count();
     qDebug() << QString( "    Adding new Tab with Name %1 and ID %2" ).arg( name ).arg( tabIndex );
     tw->insertTab( tabIndex, editor, name );
 
     // Switch to this Tab
     tw->setCurrentIndex( tabIndex );
+
+    // Tell Document Editor's input widget to take the focus
+    editor->setFocus( Qt::TabFocusReason );
 }
 
 void MainWindow::addAdderTab()
@@ -84,6 +86,11 @@ void MainWindow::addAdderTab()
     QObject::connect( addTabButton, SIGNAL( clicked() ), this, SLOT( buttonAddDocumentEditorTabButtonPressed()) );
 
     tw->setCornerWidget( addTabButton, Qt::TopLeftCorner );
+}
+
+QString MainWindow::generateEmptyTabName()
+{
+    return QString( "Untitled-%1" ).arg( m_TabCounter++ );
 }
 
 void MainWindow::buttonCompilePressed( bool checked )
@@ -116,8 +123,7 @@ void MainWindow::buttonAddDocumentEditorTabButtonPressed()
 {
     qDebug() << "Add Document Editor Tab Button pressed";
 
-    QString documentName = QString( "Untitled-%1" ).arg( m_UserInterface->tabWidget->count() +1);
-    addDocumentTab( documentName );
+    addDocumentTab( generateEmptyTabName() );
 }
 
 // The active document has changed it's status, so we need to (eventually)
@@ -131,11 +137,31 @@ void MainWindow::activeDocumentStatusChanged()
 void MainWindow::tabCloseRequested( int index )
 {
     qDebug() << "Close requested";
+
+    DocumentEditor *documentToClose = ( DocumentEditor * ) m_UserInterface->tabWidget->widget( index );
+    qDebug() << "    -> Tab Name: " << documentToClose->name();
+
+    // Remove the Tab - if it's the last tab we close, create a new one which is empty to replace
+    // this last tab.
+    QTabWidget *tw = m_UserInterface->tabWidget;
+    tw->removeTab( index );
+    delete documentToClose;
+
+    if( tw->count() == 0 )
+    {
+        qDebug() << "Creating new tab because last tab was closed by user";
+        addDocumentTab( generateEmptyTabName() );
+    }
 }
 
 void MainWindow::tabWidgetIndexChanged( int index )
 {
     qDebug() << "Tab index changed to: " << index;
+    if( index < 0 )
+    {
+        qDebug() << "   -> negative, no tab open anymore";
+        return;
+    }
 
     m_ActiveDocument = ( DocumentEditor * ) m_UserInterface->tabWidget->currentWidget();
 
@@ -164,16 +190,25 @@ void MainWindow::menuEditOptionsPressed( bool checked )
 void MainWindow::menuViewZoomInPressed( bool checked )
 {
     qDebug() << "Preview zoom in";
+
+    qreal currentScale = m_ActiveDocument->zoomIn();
+    qDebug() << "   new scale: " << currentScale;
 }
 
 void MainWindow::menuViewZoomOutPressed( bool checked )
 {
     qDebug() << "Preview zoom out";
+
+    qreal currentScale = m_ActiveDocument->zoomOut();
+    qDebug() << "   new scale: " << currentScale;
 }
 
 void MainWindow::menuViewZoomOriginalPressed( bool checked )
 {
     qDebug() << "Preview zoom normal";
+
+    qreal currentScale = m_ActiveDocument->zoomNormal();
+    qDebug() << "   new scale: " << currentScale;
 }
 
 // Check the currently active Document Editor for his status
@@ -211,10 +246,10 @@ void MainWindow::setStatusMessage( bool enabled, const QString &message, const Q
 }
 
 // PUBLIC
-MainWindow::MainWindow() : QMainWindow( 0 )
+MainWindow::MainWindow() : QMainWindow( 0 ), m_TabCounter(0)
 {
     setupUserInterface();       
-    addDocumentTab( QString( "Untitled-%1" ).arg( m_Documents.count() +1 ));
+    addDocumentTab( generateEmptyTabName() );
     addAdderTab();
 
     m_ErrorLog = new ErrorLog();

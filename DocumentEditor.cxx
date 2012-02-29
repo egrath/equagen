@@ -7,6 +7,9 @@ void DocumentEditor::setupUserInterface()
 
     // Connect editor
     QObject::connect( m_UserInterface->textEditTex, SIGNAL(textChanged()), this, SLOT(textEditorTextChanged()));
+
+    // Connect mouse wheel event of Preview scroll area
+    QObject::connect( m_UserInterface->scrollArea, SIGNAL(mouseWheelEvent(QWheelEvent*)), this, SLOT( previewScrollerMouseWheelEvent(QWheelEvent*)));
 }
 
 void DocumentEditor::textEditorTextChanged()
@@ -24,6 +27,15 @@ void DocumentEditor::textEditorTextChanged()
 
     // Set the Text to the Document
     m_Document->setPlainContent( text );
+}
+
+// Event handler for Preview scroll area mouse wheel event
+void DocumentEditor::previewScrollerMouseWheelEvent( QWheelEvent *event )
+{
+    if( event->delta() > 0 )
+        zoomIn();
+    else
+        zoomOut();
 }
 
 void DocumentEditor::copyImageToClipboard() const
@@ -45,11 +57,15 @@ DocumentEditor::DocumentEditor( const QString &name, const QString &initialConte
     setupUserInterface();
     m_Document = new Document( name, initialContent );
     m_Renderer = m_UserInterface->renderer;
+    m_PreviewScrollArea = m_UserInterface->scrollArea;
 
     // Status indicators
     m_IsModified = false;
     m_CanCompile = false;
     m_HasError = false;
+
+    // Get settings provider
+    m_Settings = SettingsProvider::getInstance();
 }
 
 DocumentEditor::~DocumentEditor()
@@ -148,7 +164,7 @@ const QUuid & DocumentEditor::uuid() const
     return m_Document->uuid();
 }
 
-// Set the template used to compile the LaTeX code
+// Set tzoomhe template used to compile the LaTeX code
 void DocumentEditor::setTexTemplate( const QString &templ )
 {
     m_Document->setTexTemplate( templ );
@@ -158,4 +174,31 @@ void DocumentEditor::setTexTemplate( const QString &templ )
 void DocumentEditor::setClipboardCopyMode( ClipboardCopyType type )
 {
     m_ClipboardCopyType = type;
+}
+
+qreal DocumentEditor::zoomIn()
+{
+    qreal scale = m_Renderer->scale();
+    scale *= 1.1;
+
+    m_Renderer->setScale( scale );
+    return scale;
+}
+
+qreal DocumentEditor::zoomOut()
+{
+    qreal scale = m_Renderer->scale();
+    if( scale >= 0.2 )
+        scale /= 1.1;
+
+    m_Renderer->setScale( scale );
+    return scale;
+}
+
+qreal DocumentEditor::zoomNormal()
+{
+    qreal defaultPreviewScale = m_Settings->previewScale();
+    m_Renderer->setScale( defaultPreviewScale );
+
+    return defaultPreviewScale;
 }
