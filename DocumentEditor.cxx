@@ -12,6 +12,20 @@ void DocumentEditor::setupUserInterface()
     QObject::connect( m_UserInterface->scrollArea, SIGNAL(mouseWheelEvent(QWheelEvent*)), this, SLOT( previewScrollerMouseWheelEvent(QWheelEvent*)));
 }
 
+// Special helper method to return a image with a 1 pixel border
+// and white background - needed for openoffice clipboard copy (because it looks ugly otherwise)
+QImage DocumentEditor::preparePngImageForClipboard() const
+{
+    QImage sourceImage = QImage::fromData( *( m_Document->pngImage().rawContent() ));
+    QImage destinationImage( sourceImage.size().width() + 4, sourceImage.size().height() + 4, QImage::Format_ARGB32 );
+
+    QPainter destinationPainter( &destinationImage );
+    destinationPainter.fillRect( 0, 0, destinationImage.width(), destinationImage.height(), Qt::white );
+    destinationPainter.drawImage( 2, 2, sourceImage );
+
+    return destinationImage;
+}
+
 void DocumentEditor::textEditorTextChanged()
 {
     QString text = m_UserInterface->textEditTex->document()->toPlainText();
@@ -38,17 +52,37 @@ void DocumentEditor::previewScrollerMouseWheelEvent( QWheelEvent *event )
         zoomOut();
 }
 
+// PUBLIC
 void DocumentEditor::copyImageToClipboard() const
 {
-    if( m_Document->documentValid() ) // We have something to copy
+    if( ! m_Document->documentValid() ) // Current document is invalid, return
+        return;
+
+    QClipboard *clip = QApplication::clipboard();
+    QMimeData *mimeData = 0;
+    QImage clipboardImage;
+
+    clip->clear();
+
+    switch( m_ClipboardCopyType )
     {
-        // Copy SVG Image to Clipboard
-        QClipboard *clip = QApplication::clipboard();
+    case CCT_SVG:
+        qDebug() << "Copying SVG to clipboard ...";
 
-        QMimeData *mimeData = new QMimeData();
+        mimeData = new QMimeData();
         mimeData->setData( "image/svg+xml", *( m_Document->svgImage().rawContent() ));
-
         clip->setMimeData( mimeData );
+        break;
+
+    case CCT_PNG:
+        qDebug() << "Copying PNG to clipboard ...";
+
+        clipboardImage = preparePngImageForClipboard();
+        clip->setImage( clipboardImage );
+        break;
+
+    default:
+        break;
     }
 }
 
@@ -76,6 +110,9 @@ DocumentEditor::DocumentEditor( DocumentType type, const QString &name, const QS
 
     // Get settings provider
     m_Settings = SettingsProvider::getInstance();
+
+    // Set default clipboard copy type to SVG
+    setClipboardCopyMode( CCT_SVG );
 }
 
 DocumentEditor::~DocumentEditor()
@@ -174,19 +211,22 @@ const QUuid & DocumentEditor::uuid() const
     return m_Document->uuid();
 }
 
-// Set tzoomhe template used to compile the LaTeX code
-void DocumentEditor::setTexTemplate( const QString &templ )
-{
-    // This method is only supposed to work if the underlaying
-    // document is a LaTeX document
-    if( m_Document->documentType() == DT_LATEX )
-        (( DocumentLatex * ) m_Document )->setTexTemplate( templ );
-}
-
 // Set the Clipboard Copy Type
 void DocumentEditor::setClipboardCopyMode( ClipboardCopyType type )
 {
     m_ClipboardCopyType = type;
+
+    qDebug() << "Document Editor: setting new copy mode to: " << type;
+}
+
+const ClipboardCopyType & DocumentEditor::clipboardCopyMode() const
+{
+    return m_ClipboardCopyType;
+}
+
+const DocumentType & DocumentEditor::documentType() const
+{
+    return m_Document->documentType();
 }
 
 qreal DocumentEditor::zoomIn()

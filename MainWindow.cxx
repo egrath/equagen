@@ -38,22 +38,25 @@ void MainWindow::setupToolbar()
 
     // Add Template selector
     QLabel *templateSelectorLabel = new QLabel( "Template" );
-    QComboBox *templateSelectorComboBox = new QComboBox();
-    templateSelectorComboBox->addItem( "Built-in Template" );
-    templateSelectorComboBox->setCurrentIndex( 0 );
+    m_TemplateSelectorComboBox = new QComboBox();
+    m_TemplateSelectorComboBox->addItem( "Built-in Template" );
+    m_TemplateSelectorComboBox->setCurrentIndex( 0 );
     m_UserInterface->toolBar->addSeparator();
     m_UserInterface->toolBar->addWidget( templateSelectorLabel );
-    m_UserInterface->toolBar->addWidget( templateSelectorComboBox );
+    m_UserInterface->toolBar->addWidget( m_TemplateSelectorComboBox );
 
     // Add PNG/SVG Copy Mode selector
     QLabel *copySelectorLabel = new QLabel( "Clipboard type" );
-    QComboBox *copySelectorComboBox = new QComboBox();
-    copySelectorComboBox->addItem( "PNG" );
-    copySelectorComboBox->addItem( "SVG" );
-    copySelectorComboBox->setCurrentIndex( 1 );
+    m_CopySelectorComboBox = new QComboBox();
+    m_CopySelectorComboBox->addItem( "PNG" );
+    m_CopySelectorComboBox->addItem( "SVG" );
+    m_CopySelectorComboBox->setCurrentIndex( 1 );
     m_UserInterface->toolBar->addSeparator();
     m_UserInterface->toolBar->addWidget( copySelectorLabel );
-    m_UserInterface->toolBar->addWidget( copySelectorComboBox );
+    m_UserInterface->toolBar->addWidget( m_CopySelectorComboBox );
+
+    // Connect
+    QObject::connect( m_CopySelectorComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(toolbarCopyModeSelectorIndexChanged(QString)));
 }
 
 // Insert a new Document Editor Tab
@@ -211,6 +214,17 @@ void MainWindow::menuViewZoomOriginalPressed( bool checked )
     qDebug() << "   new scale: " << currentScale;
 }
 
+void MainWindow::toolbarCopyModeSelectorIndexChanged( const QString &copyMode )
+{
+    ClipboardCopyType newMode;
+    if( copyMode == "SVG" )
+        newMode = CCT_SVG;
+    else if( copyMode == "PNG" )
+        newMode = CCT_PNG;
+
+    m_ActiveDocument->setClipboardCopyMode( newMode );
+}
+
 // Check the currently active Document Editor for his status
 // and set the buttons correctly enabled/disabled
 void MainWindow::checkActiveDocumentStatus()
@@ -229,6 +243,25 @@ void MainWindow::checkActiveDocumentStatus()
         m_UserInterface->buttonCopyClipboard->setEnabled( true );
     else
         m_UserInterface->buttonCopyClipboard->setEnabled( false );
+
+    // Set Copy Type to match the DocumentEditor
+    ClipboardCopyType copyMode = m_ActiveDocument->clipboardCopyMode();
+    m_CopySelectorComboBox->setCurrentIndex( copyMode );
+
+    // Disable/Enable UI elements according to Document Type
+    switch( m_ActiveDocument->documentType() )
+    {
+    case DT_LATEX:
+        m_TemplateSelectorComboBox->setEnabled( true );
+        break;
+
+    case DT_SKETCH:
+        m_TemplateSelectorComboBox->setEnabled( false );
+        break;
+
+    default:
+        break;
+    }
 }
 
 void MainWindow::setStatusMessage( bool enabled, const QString &message, const QColor &color )

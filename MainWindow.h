@@ -14,11 +14,17 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 private:
+    // UI stuff
     Ui_MainWindow *m_UserInterface;
+    QLabel *m_StatusLabel;
+    QComboBox *m_CopySelectorComboBox;
+    QComboBox *m_TemplateSelectorComboBox;
+
+    // Document stuff
     DocumentEditor *m_ActiveDocument;
     ErrorLog *m_ErrorLog;
-    SettingsProvider *m_Settings;
-    QLabel *m_StatusLabel;
+
+    SettingsProvider *m_Settings;    
 
     int m_TabCounter;
 
@@ -48,6 +54,8 @@ private slots:
     void menuViewZoomInPressed( bool checked );
     void menuViewZoomOutPressed( bool checked );
     void menuViewZoomOriginalPressed( bool checked );
+
+    void toolbarCopyModeSelectorIndexChanged( const QString &copyMode );
 
 public:
     MainWindow();

@@ -27,6 +27,7 @@ private:
     ClipboardCopyType m_ClipboardCopyType;
 
     void setupUserInterface();
+    QImage preparePngImageForClipboard() const;
 
 private slots:
     void textEditorTextChanged();
@@ -54,11 +55,12 @@ public:
     // Document UUID getter
     const QUuid & uuid() const;
 
-    // Template used by the contained Document
-    void setTexTemplate( const QString &templ );
-
     // Type of Image for Clipboard copy
     void setClipboardCopyMode( ClipboardCopyType type );
+    const ClipboardCopyType & clipboardCopyMode() const;
+
+    // Type of underlaying Document
+    const DocumentType & documentType() const;
 
     // Zoom operations
     qreal zoomIn();
