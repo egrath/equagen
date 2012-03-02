@@ -40,7 +40,7 @@ void DocumentEditor::previewScrollerMouseWheelEvent( QWheelEvent *event )
 
 void DocumentEditor::copyImageToClipboard() const
 {
-    if( m_Document->valid() ) // We have something to copy
+    if( m_Document->documentValid() ) // We have something to copy
     {
         // Copy SVG Image to Clipboard
         QClipboard *clip = QApplication::clipboard();
@@ -52,10 +52,20 @@ void DocumentEditor::copyImageToClipboard() const
     }
 }
 
-DocumentEditor::DocumentEditor( const QString &name, const QString &initialContent, QWidget *parent ) : QWidget( parent )
+DocumentEditor::DocumentEditor( DocumentType type, const QString &name, const QString &initialContent, QWidget *parent ) : QWidget( parent )
 {
     setupUserInterface();
-    m_Document = new Document( name, initialContent );
+
+    // Create the underlaying document
+    switch( type )
+    {
+    case DT_LATEX:
+        m_Document = new DocumentLatex( name, initialContent );
+        break;
+    default:
+        throw( new QString( "Attempt to create invalid document type" ));
+    }
+
     m_Renderer = m_UserInterface->renderer;
     m_PreviewScrollArea = m_UserInterface->scrollArea;
 
@@ -122,7 +132,7 @@ const QString & DocumentEditor::compilerLog() const
 // Was the last compile successful?
 bool DocumentEditor::lastCompileSuccessfull() const
 {
-    return m_Document->valid();
+    return m_Document->documentValid();
 }
 
 // Is the document modified?
@@ -140,7 +150,7 @@ bool DocumentEditor::canCompile() const
 // Do we have a finished image to copy to the clipboard
 bool DocumentEditor::canCopy() const
 {
-    return m_Document->valid();
+    return m_Document->documentValid();
 }
 
 // Has the document an error? (Last compile failed)
@@ -167,7 +177,10 @@ const QUuid & DocumentEditor::uuid() const
 // Set tzoomhe template used to compile the LaTeX code
 void DocumentEditor::setTexTemplate( const QString &templ )
 {
-    m_Document->setTexTemplate( templ );
+    // This method is only supposed to work if the underlaying
+    // document is a LaTeX document
+    if( m_Document->documentType() == DT_LATEX )
+        (( DocumentLatex * ) m_Document )->setTexTemplate( templ );
 }
 
 // Set the Clipboard Copy Type

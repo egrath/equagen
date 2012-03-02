@@ -24,7 +24,8 @@ SOURCES += \
     BaseImage.cxx \
     SettingsDialog.cxx \
     SettingsProvider.cxx \
-    PreviewScrollArea.cxx
+    PreviewScrollArea.cxx \
+    DocumentLatex.cxx
 
 HEADERS += \
     Document.h \
@@ -39,7 +40,8 @@ HEADERS += \
     SettingsDialog.h \
     SettingsProvider.h \
     ClipboardManager.h \
-    PreviewScrollArea.h
+    PreviewScrollArea.h \
+    DocumentLatex.h
 
 FORMS += \
     MainWindow.ui \

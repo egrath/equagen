@@ -14,15 +14,18 @@
 #include "SvgImage.h"
 #include "PngImage.h"
 
+enum DocumentType
+{
+    DT_LATEX,
+    DT_SKETCH,
+    DT_INVALID
+};
+
 class Document
 {
 private:
     QString m_PlainContent;
-    QString m_TexTemplate;
     QString m_Name;
-
-    SvgImage *m_Svg;
-    PngImage *m_Png;
 
     QUuid m_Uuid;
 
@@ -30,6 +33,18 @@ private:
 
     QString m_LastCompileErrorMessage;
     bool m_Valid;
+
+    DocumentType m_DocType;
+
+protected:
+    SvgImage *m_Svg;
+    PngImage *m_Png;
+
+    void setLastCompileError( const QString &error );
+    void setDocumentValid( bool documentValid );
+    void setDocumentType( DocumentType type );
+
+    SettingsProvider * settingsProvider();
 
 public:
     Document( const QString &name = "", const QString &initial = "" );
@@ -42,13 +57,8 @@ public:
     void setName( const QString &name );
     const QString & name() const;
 
-    // Templates for embedding the LaTeX code
-    void setTexTemplate( const QString &templ );
-    const QString & texTemplate() const;
-    void loadTexTemplateFromFile( const QString &fileName );
-
     // Compile Document to SVG and PNG
-    bool compile();
+    virtual bool compile() = 0;
     const QString & lastCompileError() const;
 
     // Get SVG/PNG Documents
@@ -59,7 +69,10 @@ public:
     const QUuid & uuid() const;
 
     // Is the current document valid? (i.e. have the PNG/SVN's generated)
-    bool valid() const;
+    bool documentValid() const;
+
+    // Get the type of the current Document
+    const DocumentType & documentType() const;
 };
 
 #endif // DOCUMENT_H

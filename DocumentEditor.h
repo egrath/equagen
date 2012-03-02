@@ -4,7 +4,7 @@
 #include <QWheelEvent>
 
 #include "ClipboardManager.h"
-#include "Document.h"
+#include "DocumentLatex.h"
 #include "SettingsProvider.h"
 
 #include "ui_DocumentEditor.h"
@@ -33,7 +33,7 @@ private slots:
     void previewScrollerMouseWheelEvent( QWheelEvent *event );
 
 public:
-    DocumentEditor( const QString &name = "", const QString &initialContent = "", QWidget *parent = 0 );
+    DocumentEditor( DocumentType type, const QString &name = "", const QString &initialContent = "", QWidget *parent = 0 );
     ~DocumentEditor();
 
     const QString & compilerLog() const;

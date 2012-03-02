@@ -64,7 +64,7 @@ void MainWindow::addDocumentTab( const QString &name )
     QTabWidget *tw = m_UserInterface->tabWidget;
 
     // Build Tab content
-    DocumentEditor *editor = new DocumentEditor( name );
+    DocumentEditor *editor = new DocumentEditor( DT_LATEX, name );
 
     // Append to Tab Widget
     int tabIndex = tw->count();
