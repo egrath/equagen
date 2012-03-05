@@ -19,8 +19,10 @@ void MainWindow::setupUserInterface()
     // Connect Edit->Options dialog
     QObject::connect( m_UserInterface->actionEditOptions, SIGNAL( triggered( bool )), this, SLOT( menuEditOptionsPressed(bool)));
 
-    // Connect File->Quit
+    // Connect File Menu
     QObject::connect( m_UserInterface->actionFileQuit, SIGNAL( triggered( bool )), this, SLOT( menuFileQuitPressed(bool)));
+    QObject::connect( m_UserInterface->actionFileExportPng, SIGNAL(triggered(bool)), this, SLOT(menuFileExportPngPressed(bool)));
+    QObject::connect( m_UserInterface->actionFileExportSvg, SIGNAL(triggered(bool)), this, SLOT(menuFileExportSvgPressed(bool)));
 
     // Connect View Items
     QObject::connect( m_UserInterface->actionViewZoomIn, SIGNAL( triggered( bool )), this, SLOT( menuViewZoomInPressed(bool)));
@@ -181,6 +183,18 @@ void MainWindow::menuFileQuitPressed( bool checked )
     QApplication::quit();
 }
 
+void MainWindow::menuFileExportSvgPressed( bool checked )
+{
+    qDebug() << "MainWindow: Export as SVG";
+
+    QString fileName = showFileDialog( QFileDialog::AcceptSave );
+}
+
+void MainWindow::menuFileExportPngPressed( bool checked )
+{
+    qDebug() << "MainWindow: Export as PNG";
+}
+
 void MainWindow::menuEditOptionsPressed( bool checked )
 {
     SettingsDialog dialog( this );
@@ -262,6 +276,13 @@ void MainWindow::checkActiveDocumentStatus()
     default:
         break;
     }
+
+    // Enable/Disable all export functionality according to document status
+    if( ! m_ActiveDocument->hasError() && m_ActiveDocument->canCopy() )
+        m_UserInterface->menu_Export->setEnabled( true );
+    else
+        m_UserInterface->menu_Export->setEnabled( false );
+
 }
 
 void MainWindow::setStatusMessage( bool enabled, const QString &message, const QColor &color )
@@ -276,6 +297,28 @@ void MainWindow::setStatusMessage( bool enabled, const QString &message, const Q
     }
 
     m_StatusLabel->setText( message );
+}
+
+QString MainWindow::showFileDialog( QFileDialog::AcceptMode acceptMode )
+{
+    static QString directory = QDir::current().dirName();
+    QString fileName = "";
+
+    QFileDialog fileDialog;
+    fileDialog.setAcceptMode( acceptMode );
+    fileDialog.setAcceptDrops( true  );
+    fileDialog.setDirectory( directory );
+
+    if( fileDialog.exec() )
+    {
+        fileName = fileDialog.selectedFiles().at( 0 );
+        directory = QDir( fileName ).dirName();
+
+        qDebug() << fileName;
+        qDebug() << directory;
+    }
+
+    return fileName;
 }
 
 // PUBLIC

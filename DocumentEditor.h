@@ -4,8 +4,8 @@
 #include <QWheelEvent>
 
 #include "ClipboardManager.h"
-#include "DocumentLatex.h"
 #include "SettingsProvider.h"
+#include "DocumentFactory.h"
 
 #include "ui_DocumentEditor.h"
 

@@ -38,6 +38,8 @@ private:
     void checkActiveDocumentStatus();
     void setStatusMessage( bool enabled, const QString &message = "", const QColor & color = QColor( 0, 0, 0 ));
 
+    QString showFileDialog( QFileDialog::AcceptMode acceptMode = QFileDialog::AcceptOpen );
+
 private slots:
     void buttonCompilePressed( bool checked );
     void buttonErrorLogPressed( bool checked );
@@ -49,11 +51,13 @@ private slots:
     void activeDocumentStatusChanged();
 
     void menuFileQuitPressed( bool checked );
+    void menuFileExportSvgPressed( bool checked );
+    void menuFileExportPngPressed( bool checked );
     void menuEditOptionsPressed( bool checked );
 
     void menuViewZoomInPressed( bool checked );
     void menuViewZoomOutPressed( bool checked );
-    void menuViewZoomOriginalPressed( bool checked );
+    void menuViewZoomOriginalPressed( bool checked );    
 
     void toolbarCopyModeSelectorIndexChanged( const QString &copyMode );
 

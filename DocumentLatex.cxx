@@ -75,7 +75,7 @@ bool DocumentLatex::compile()
     cmdArguments.append( "-T" );
     cmdArguments.append( "tight" );
     cmdArguments.append( "-D" );
-    cmdArguments.append( "150" );
+    cmdArguments.append( "300" );
     cmdArguments.append( "-o" );
     cmdArguments.append( "equation.png" );
     cmdArguments.append( "equation.dvi" );

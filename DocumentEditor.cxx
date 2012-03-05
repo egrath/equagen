@@ -91,14 +91,9 @@ DocumentEditor::DocumentEditor( DocumentType type, const QString &name, const QS
     setupUserInterface();
 
     // Create the underlaying document
-    switch( type )
-    {
-    case DT_LATEX:
-        m_Document = new DocumentLatex( name, initialContent );
-        break;
-    default:
-        throw( new QString( "Attempt to create invalid document type" ));
-    }
+    m_Document = DocumentFactory::instance()->createDocument( type );
+    m_Document->setName( name );
+    m_Document->setPlainContent( initialContent );
 
     m_Renderer = m_UserInterface->renderer;
     m_PreviewScrollArea = m_UserInterface->scrollArea;
