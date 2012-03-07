@@ -3,6 +3,12 @@
 
 #include <QByteArray>
 
+enum ImageType
+{
+    IT_SVG,
+    IT_PNG
+};
+
 class BaseImage
 {
 private:

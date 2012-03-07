@@ -11,6 +11,7 @@
         <file alias="zoom-in">extlib/gnome-icon-theme/scalable/actions/zoom-in-symbolic.svg</file>
         <file alias="zoom-out">extlib/gnome-icon-theme/scalable/actions/zoom-out-symbolic.svg</file>
         <file alias="zoom-original">extlib/gnome-icon-theme/scalable/actions/zoom-original-symbolic.svg</file>
+        <file alias="export-document">extlib/elementary/actions/48/document-export.svg</file>
     </qresource>
     <qresource prefix="/templates">
         <file alias="equation.template">templates/equation.template</file>

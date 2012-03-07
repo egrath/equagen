@@ -59,6 +59,9 @@ public:
     void setClipboardCopyMode( ClipboardCopyType type );
     const ClipboardCopyType & clipboardCopyMode() const;
 
+    // Export document to file
+    bool exportDocumentToFile( ImageType type, const QString &fileName );
+
     // Type of underlaying Document
     const DocumentType & documentType() const;
 

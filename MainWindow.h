@@ -30,7 +30,7 @@ private:
 
     void setupUserInterface();
     void setupToolbar();
-    void addDocumentTab( const QString &name );
+    void addDocumentTab( DocumentType type, const QString &name );
     void addAdderTab();
 
     QString generateEmptyTabName();
@@ -38,13 +38,12 @@ private:
     void checkActiveDocumentStatus();
     void setStatusMessage( bool enabled, const QString &message = "", const QColor & color = QColor( 0, 0, 0 ));
 
-    QString showFileDialog( QFileDialog::AcceptMode acceptMode = QFileDialog::AcceptOpen );
+    bool exportCurrentDocument( ImageType type );
 
 private slots:
     void buttonCompilePressed( bool checked );
     void buttonErrorLogPressed( bool checked );
     void buttonCopyClipboardPressed( bool checked );
-    void buttonAddDocumentEditorTabButtonPressed();
 
     void tabWidgetIndexChanged( int index );
     void tabCloseRequested( int index );
@@ -58,6 +57,9 @@ private slots:
     void menuViewZoomInPressed( bool checked );
     void menuViewZoomOutPressed( bool checked );
     void menuViewZoomOriginalPressed( bool checked );    
+
+    void menuAddLatexDocumentPressed();
+    void menuAddSketchDocumentPressed();
 
     void toolbarCopyModeSelectorIndexChanged( const QString &copyMode );
 

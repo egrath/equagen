@@ -62,14 +62,14 @@ void MainWindow::setupToolbar()
 }
 
 // Insert a new Document Editor Tab
-void MainWindow::addDocumentTab( const QString &name )
+void MainWindow::addDocumentTab( DocumentType type, const QString &name )
 {
     qDebug() << "MainWindow::addDocumentTab";
 
     QTabWidget *tw = m_UserInterface->tabWidget;
 
     // Build Tab content
-    DocumentEditor *editor = new DocumentEditor( DT_LATEX, name );
+    DocumentEditor *editor = new DocumentEditor( type, name );
 
     // Append to Tab Widget
     int tabIndex = tw->count();
@@ -86,11 +86,18 @@ void MainWindow::addDocumentTab( const QString &name )
 void MainWindow::addAdderTab()
 {
     QTabWidget *tw = m_UserInterface->tabWidget;
-    QPushButton *addTabButton = new QPushButton( QIcon( ":/icons/list-add.svg" ), "" );
+    QPushButton *addDocumentButton = new QPushButton( QIcon( ":/icons/list-add.svg" ), "" );
 
-    QObject::connect( addTabButton, SIGNAL( clicked() ), this, SLOT( buttonAddDocumentEditorTabButtonPressed()) );
+    QMenu *addDocumentMenu = new QMenu( addDocumentButton );
+    QAction *addLatexDocumentTabAction = addDocumentMenu->addAction( "LaTeX Document" );
+    QAction *addSketchDocumentTabAction = addDocumentMenu->addAction( "Sketch Document" );
 
-    tw->setCornerWidget( addTabButton, Qt::TopLeftCorner );
+    QObject::connect( addLatexDocumentTabAction, SIGNAL(triggered()), this, SLOT(menuAddLatexDocumentPressed()));
+    QObject::connect( addSketchDocumentTabAction, SIGNAL( triggered() ), this, SLOT(menuAddSketchDocumentPressed()));
+
+    addDocumentButton->setMenu( addDocumentMenu );
+
+    tw->setCornerWidget( addDocumentButton, Qt::TopLeftCorner );
 }
 
 QString MainWindow::generateEmptyTabName()
@@ -98,6 +105,44 @@ QString MainWindow::generateEmptyTabName()
     return QString( "Untitled-%1" ).arg( m_TabCounter++ );
 }
 
+bool MainWindow::exportCurrentDocument( ImageType type )
+{
+    qDebug() << "MainWindow: Exporting ...";
+
+    static QString previousFolder = QDir( QDir::currentPath() ).dirName();
+    QFileDialog saveAsDialog( this );
+    saveAsDialog.setAcceptMode( QFileDialog::AcceptSave );
+
+    if( type == IT_SVG )
+    {
+        saveAsDialog.setWindowTitle( "Export as SVG" );
+        saveAsDialog.setNameFilter( "Scalable Vector Graphics (*.svg)" );
+
+    }
+    else if( type == IT_PNG )
+    {
+        saveAsDialog.setWindowTitle( "Export as PNG" );
+        saveAsDialog.setNameFilter( "Portable Network Graphics (*.png)" );
+    }
+
+    if( saveAsDialog.exec() == QFileDialog::Accepted )
+    {
+        QString fileName = saveAsDialog.selectedFiles().at( 0 );
+        previousFolder = QDir( fileName ).path();
+
+        // Check if the user has appended the suffix
+        if( type == IT_SVG && ! fileName.endsWith( ".svg", Qt::CaseInsensitive ))
+            fileName.append( ".svg" );
+        else if( type == IT_PNG && ! fileName.endsWith( ".png", Qt::CaseInsensitive ))
+            fileName.append( ".png" );
+
+        m_ActiveDocument->exportDocumentToFile( type, fileName );
+    }
+
+    return false;
+}
+
+// PRIVATE SLOTS
 void MainWindow::buttonCompilePressed( bool checked )
 {
     qDebug() << "Compile button";
@@ -124,13 +169,6 @@ void MainWindow::buttonCopyClipboardPressed( bool checked )
     m_ActiveDocument->copyImageToClipboard();
 }
 
-void MainWindow::buttonAddDocumentEditorTabButtonPressed()
-{
-    qDebug() << "Add Document Editor Tab Button pressed";
-
-    addDocumentTab( generateEmptyTabName() );
-}
-
 // The active document has changed it's status, so we need to (eventually)
 // change the button states.
 void MainWindow::activeDocumentStatusChanged()
@@ -155,7 +193,7 @@ void MainWindow::tabCloseRequested( int index )
     if( tw->count() == 0 )
     {
         qDebug() << "Creating new tab because last tab was closed by user";
-        addDocumentTab( generateEmptyTabName() );
+        addDocumentTab( DT_LATEX, generateEmptyTabName() );
     }
 }
 
@@ -186,13 +224,13 @@ void MainWindow::menuFileQuitPressed( bool checked )
 void MainWindow::menuFileExportSvgPressed( bool checked )
 {
     qDebug() << "MainWindow: Export as SVG";
-
-    QString fileName = showFileDialog( QFileDialog::AcceptSave );
+    exportCurrentDocument( IT_SVG );
 }
 
 void MainWindow::menuFileExportPngPressed( bool checked )
 {
     qDebug() << "MainWindow: Export as PNG";
+    exportCurrentDocument( IT_PNG );
 }
 
 void MainWindow::menuEditOptionsPressed( bool checked )
@@ -226,6 +264,18 @@ void MainWindow::menuViewZoomOriginalPressed( bool checked )
 
     qreal currentScale = m_ActiveDocument->zoomNormal();
     qDebug() << "   new scale: " << currentScale;
+}
+
+void MainWindow::menuAddLatexDocumentPressed()
+{
+    qDebug() << "MainWindow: Adding LaTeX Document Tab";
+    addDocumentTab( DT_LATEX, generateEmptyTabName() );
+}
+
+void MainWindow::menuAddSketchDocumentPressed()
+{
+    qDebug() << "MainWindow: Adding Sketch Document Tab";
+    addDocumentTab( DT_SKETCH, generateEmptyTabName() );
 }
 
 void MainWindow::toolbarCopyModeSelectorIndexChanged( const QString &copyMode )
@@ -299,33 +349,11 @@ void MainWindow::setStatusMessage( bool enabled, const QString &message, const Q
     m_StatusLabel->setText( message );
 }
 
-QString MainWindow::showFileDialog( QFileDialog::AcceptMode acceptMode )
-{
-    static QString directory = QDir::current().dirName();
-    QString fileName = "";
-
-    QFileDialog fileDialog;
-    fileDialog.setAcceptMode( acceptMode );
-    fileDialog.setAcceptDrops( true  );
-    fileDialog.setDirectory( directory );
-
-    if( fileDialog.exec() )
-    {
-        fileName = fileDialog.selectedFiles().at( 0 );
-        directory = QDir( fileName ).dirName();
-
-        qDebug() << fileName;
-        qDebug() << directory;
-    }
-
-    return fileName;
-}
-
 // PUBLIC
 MainWindow::MainWindow() : QMainWindow( 0 ), m_TabCounter(0)
 {
     setupUserInterface();       
-    addDocumentTab( generateEmptyTabName() );
+    addDocumentTab( DT_LATEX, generateEmptyTabName() );
     addAdderTab();
 
     m_ErrorLog = new ErrorLog();

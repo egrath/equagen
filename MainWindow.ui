@@ -236,13 +236,27 @@
    </property>
   </action>
   <action name="actionFileExportSvg">
+   <property name="icon">
+    <iconset resource="equagen.qrc">
+     <normaloff>:/icons/export-document</normaloff>:/icons/export-document</iconset>
+   </property>
    <property name="text">
     <string>SVG</string>
    </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
   </action>
   <action name="actionFileExportPng">
+   <property name="icon">
+    <iconset resource="equagen.qrc">
+     <normaloff>:/icons/export-document</normaloff>:/icons/export-document</iconset>
+   </property>
    <property name="text">
     <string>PNG</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
    </property>
   </action>
  </widget>

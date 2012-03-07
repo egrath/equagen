@@ -91,7 +91,15 @@ DocumentEditor::DocumentEditor( DocumentType type, const QString &name, const QS
     setupUserInterface();
 
     // Create the underlaying document
-    m_Document = DocumentFactory::instance()->createDocument( type );
+    try
+    {
+        m_Document = DocumentFactory::instance()->createDocument( type );
+    }
+    catch( QString *msg )
+    {
+        qDebug() << "Exception: " << *msg;
+    }
+
     m_Document->setName( name );
     m_Document->setPlainContent( initialContent );
 
@@ -217,6 +225,33 @@ void DocumentEditor::setClipboardCopyMode( ClipboardCopyType type )
 const ClipboardCopyType & DocumentEditor::clipboardCopyMode() const
 {
     return m_ClipboardCopyType;
+}
+
+bool DocumentEditor::exportDocumentToFile( ImageType type, const QString &fileName )
+{
+    QFile exportFile( fileName );
+    exportFile.open( QFile::WriteOnly );
+
+    if( type == IT_SVG )
+    {
+        // Save as SVG
+        exportFile.write( *( m_Document->svgImage().rawContent() ));
+        exportFile.close();
+        return true;
+    }
+    else if( type == IT_PNG )
+    {
+        // Save as PNG
+        exportFile.write( *( m_Document->pngImage().rawContent() ));
+        exportFile.close();
+        return true;
+    }
+
+    // If for some reason we haven't written the export, remove the empty file
+    exportFile.close();
+    QFile::remove( fileName );
+
+    return false;
 }
 
 const DocumentType & DocumentEditor::documentType() const
