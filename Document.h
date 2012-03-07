@@ -9,9 +9,12 @@
 #include <QDir>
 #include <QProcess>
 #include <QUuid>
+#include <QImage>
+#include <QtSvg>
 
 #include "SettingsProvider.h"
 #include "SvgImage.h"
+#include "SvgUtils.h"
 #include "PngImage.h"
 
 enum DocumentType

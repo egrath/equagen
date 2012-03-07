@@ -30,7 +30,7 @@ Document::Document( const QString &name, const QString &initial )
     m_Svg = 0;
     m_Png = 0;
     setDocumentValid( false );
-    m_Settings = SettingsProvider::getInstance();
+    m_Settings = SettingsProvider::instance();
 
     // Generate a uuid for this document
     m_Uuid = QUuid::createUuid();

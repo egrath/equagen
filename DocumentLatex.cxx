@@ -5,7 +5,7 @@ DocumentLatex::DocumentLatex(const QString &name, const QString &initial) : Docu
     qDebug() << "DocumentLatex::ctor()";
 
     setDocumentType( DT_LATEX );
-    loadTexTemplateFromFile( ":/templates/equation.template" );
+    loadTexTemplateFromFile( ":/templates/latex.template" );
 }
 
 DocumentLatex::~DocumentLatex()
@@ -44,10 +44,14 @@ bool DocumentLatex::compile()
     // Create temporary file with content combined with template
     QString templ = QString( m_TexTemplate );
     QString cont( templ.replace( "[% equation -%]", plainContent() ));
-    QFile texFile( QString( "%1/equation.tex" ).arg( tempDir.path() ));
+    QFile texFile( QString( "%1/latex.tex" ).arg( tempDir.path() ));
     texFile.open( QFile::WriteOnly );
     texFile.write( cont.toStdString().c_str() );
     texFile.close();
+
+    qDebug() << "----------- TEX FILE START --------------";
+    qDebug() << cont;
+    qDebug() << "----------- TEX FILE END ----------------";
 
     // Compile LaTeX to DVI
     QProcess cmd;
@@ -57,30 +61,9 @@ bool DocumentLatex::compile()
     QStringList cmdArguments;
     cmdArguments.append( "-halt-on-error" );
     cmdArguments.append( "-no-shell-escape" );
-    cmdArguments.append( "equation.tex" );
+    cmdArguments.append( "latex.tex" );
 
     cmd.start( settingsProvider()->latexBinary(), cmdArguments );
-    if( ! cmd.waitForFinished() || cmd.exitCode() != 0 )
-    {
-        // Error occured
-        setLastCompileError( QString( cmd.readAll() ));
-        throw( new QString( "Compilation failed" ));
-    }
-
-    // Convert DVI to PNG
-    cmdArguments.clear();
-    cmdArguments.append( "-q" );
-    cmdArguments.append( "-bg" );
-    cmdArguments.append( "Transparent" );
-    cmdArguments.append( "-T" );
-    cmdArguments.append( "tight" );
-    cmdArguments.append( "-D" );
-    cmdArguments.append( "300" );
-    cmdArguments.append( "-o" );
-    cmdArguments.append( "equation.png" );
-    cmdArguments.append( "equation.dvi" );
-
-    cmd.start( settingsProvider()->dvipngBinary(), cmdArguments );
     if( ! cmd.waitForFinished() || cmd.exitCode() != 0 )
     {
         // Error occured
@@ -92,8 +75,10 @@ bool DocumentLatex::compile()
     cmdArguments.clear();
     cmdArguments.append( "--output=equation.svg" );
     cmdArguments.append( "--no-fonts" );
+    cmdArguments.append( "--no-style" );
+    cmdArguments.append( "--exact" );
     cmdArguments.append( "--scale=2" );
-    cmdArguments.append( "equation.dvi" );
+    cmdArguments.append( "latex.dvi" );
 
     cmd.start( settingsProvider()->dvisvgmBinary(), cmdArguments );
     if( ! cmd.waitForFinished() || cmd.exitCode() != 0 )
@@ -103,20 +88,18 @@ bool DocumentLatex::compile()
         throw( new QString( "Compilation failed" ));
     }
 
-    // Read resulting files to build internal representation
-    QFile pngFile( QString( "%1/equation.png" ).arg( tempDir.path() ));
-    pngFile.open( QFile::ReadOnly );
-    if( m_Png != 0 )
-        delete m_Png;
-    m_Png = new PngImage( pngFile.readAll() );
-    pngFile.close();
-
+    // Read the SVG File for internal usage
     QFile svgFile( QString( "%1/equation.svg" ).arg( tempDir.path() ));
     svgFile.open( QFile::ReadOnly );
     if( m_Svg != 0 )
         delete m_Svg;
     m_Svg = new SvgImage( svgFile.readAll() );
     svgFile.close();
+
+    // Convert the SVG to PNG
+    QByteArray *rawPng = SvgUtils::rasterSvgToPng( *( m_Svg->rawContent() ));
+    m_Png = new PngImage( *rawPng );
+    delete rawPng;
 
     // Remove temporary files
     QFileInfoList files = tempDir.entryInfoList();

@@ -71,10 +71,17 @@ void MainWindow::addDocumentTab( DocumentType type, const QString &name )
     // Build Tab content
     DocumentEditor *editor = new DocumentEditor( type, name );
 
+    // Load icon for tab
+    QIcon tabIcon;
+    if( type == DT_LATEX )
+        tabIcon = QIcon( ":/icons/latex-symbol.svg" );
+    else if( type == DT_SKETCH )
+        tabIcon = QIcon( ":/icons/sketch-symbol.svg" );
+
     // Append to Tab Widget
     int tabIndex = tw->count();
     qDebug() << QString( "    Adding new Tab with Name %1 and ID %2" ).arg( name ).arg( tabIndex );
-    tw->insertTab( tabIndex, editor, name );
+    tw->insertTab( tabIndex, editor, tabIcon, name );
 
     // Switch to this Tab
     tw->setCurrentIndex( tabIndex );
@@ -91,6 +98,7 @@ void MainWindow::addAdderTab()
     QMenu *addDocumentMenu = new QMenu( addDocumentButton );
     QAction *addLatexDocumentTabAction = addDocumentMenu->addAction( "LaTeX Document" );
     QAction *addSketchDocumentTabAction = addDocumentMenu->addAction( "Sketch Document" );
+    addSketchDocumentTabAction->setEnabled( false );
 
     QObject::connect( addLatexDocumentTabAction, SIGNAL(triggered()), this, SLOT(menuAddLatexDocumentPressed()));
     QObject::connect( addSketchDocumentTabAction, SIGNAL( triggered() ), this, SLOT(menuAddSketchDocumentPressed()));
@@ -359,7 +367,7 @@ MainWindow::MainWindow() : QMainWindow( 0 ), m_TabCounter(0)
     m_ErrorLog = new ErrorLog();
     m_ErrorLog->setWindowModality( Qt::ApplicationModal );
 
-    m_Settings = SettingsProvider::getInstance();
+    m_Settings = SettingsProvider::instance();
     if( ! m_Settings->valid() )
     {
         setStatusMessage( true, "Configuration invalid!", QColor( 255, 0, 0));

@@ -52,6 +52,12 @@ void DocumentEditor::previewScrollerMouseWheelEvent( QWheelEvent *event )
         zoomOut();
 }
 
+// Event handler for SettingsProvider, called when the settings have changed
+void DocumentEditor::configurationSettingsChanged()
+{
+    qDebug() << "DocumentEditor: configuration settings changed";
+}
+
 // PUBLIC
 void DocumentEditor::copyImageToClipboard() const
 {
@@ -112,7 +118,10 @@ DocumentEditor::DocumentEditor( DocumentType type, const QString &name, const QS
     m_HasError = false;
 
     // Get settings provider
-    m_Settings = SettingsProvider::getInstance();
+    m_Settings = SettingsProvider::instance();
+
+    // We want to get informed if the user has changed global settings
+    QObject::connect( m_Settings, SIGNAL(configurationSettingsChanged()), this, SLOT(configurationSettingsChanged()));
 
     // Set default clipboard copy type to SVG
     setClipboardCopyMode( CCT_SVG );

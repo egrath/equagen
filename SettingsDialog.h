@@ -4,6 +4,7 @@
 #include <QDebug>
 #include <QFileDialog>
 #include <QDir>
+#include <QFontDatabase>
 
 #include "SettingsProvider.h"
 #include "ui_SettingsDialog.h"
@@ -17,11 +18,14 @@ private:
     SettingsProvider *m_Settings;
 
     void setupUserInterface();
+    void setupFontTab();
 
 private slots:
     void buttonBrowseLatexPressed();
-    void buttonBrowseDvipngPressed();
     void buttonBrowseDvisvgmPressed();
+
+    void buttonTextColorPressed();
+    void buttonBackgroundColorPressed();
 
     void buttonSavePressed();
     void buttonCancelPressed();

@@ -2,7 +2,7 @@
 
 void Renderer::init()
 {
-    m_Settings = SettingsProvider::getInstance();
+    m_Settings = SettingsProvider::instance();
 
     // Set configured preview scale
     setScale( m_Settings->previewScale() );

@@ -15,7 +15,7 @@ SettingsProvider::~SettingsProvider()
 }
 
 // PUBLIC
-SettingsProvider * SettingsProvider::getInstance()
+SettingsProvider * SettingsProvider::instance()
 {
     if( m_Instance == 0 )
         m_Instance = new SettingsProvider();
@@ -29,12 +29,6 @@ void SettingsProvider::setLatexBinary( const QString &path )
     m_Settings->sync();
 }
 
-void SettingsProvider::setDvipngBinary( const QString &path )
-{
-    m_Settings->setValue( "Compiler/dvipngBinary", path );
-    m_Settings->sync();
-}
-
 void SettingsProvider::setDvisvgmBinary( const QString &path )
 {
     m_Settings->setValue( "Compiler/dvisvgmBinary", path );
@@ -44,11 +38,6 @@ void SettingsProvider::setDvisvgmBinary( const QString &path )
 QString SettingsProvider::latexBinary() const
 {
     return m_Settings->value( "Compiler/latexBinary", QString("")).toString();
-}
-
-QString SettingsProvider::dvipngBinary() const
-{
-    return m_Settings->value( "Compiler/dvipngBinary", QString("")).toString();
 }
 
 QString SettingsProvider::dvisvgmBinary() const
@@ -68,12 +57,32 @@ qreal SettingsProvider::previewScale() const
     return m_Settings->value( "Preview/scale", "1.0" ).toReal();
 }
 
+// Editor font
+void SettingsProvider::setEditorFont( const QString &family, int pointSize )
+{
+    m_Settings->setValue( "Editor/fontFamily", family );
+    m_Settings->setValue( "Editor/fontSize", pointSize );
+    m_Settings->sync();
+}
+
+QFont SettingsProvider::editorFont() const
+{
+    QString fontFamily = m_Settings->value( "Editor/fontFamily", "Monospace" ).toString();
+    int fontSize = m_Settings->value( "Editor/fontSize", "10" ).toInt();
+
+    return QFont( fontFamily, fontSize );
+}
+
 bool SettingsProvider::valid() const
 {
     if( latexBinary().length() > 0 &&
-        dvipngBinary().length() > 0 &&
         dvisvgmBinary().length() > 0 )
         return true;
     return false;
+}
+
+void SettingsProvider::setDirty()
+{
+    emit configurationSettingsChanged();
 }
 

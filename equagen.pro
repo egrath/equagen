@@ -26,7 +26,8 @@ SOURCES += \
     SettingsProvider.cxx \
     PreviewScrollArea.cxx \
     DocumentLatex.cxx \
-    DocumentFactory.cxx
+    DocumentFactory.cxx \
+    SvgUtils.cxx
 
 HEADERS += \
     Document.h \
@@ -43,7 +44,8 @@ HEADERS += \
     ClipboardManager.h \
     PreviewScrollArea.h \
     DocumentLatex.h \
-    DocumentFactory.h
+    DocumentFactory.h \
+    SvgUtils.h
 
 FORMS += \
     MainWindow.ui \
@@ -53,3 +55,6 @@ FORMS += \
 
 RESOURCES += \
     equagen.qrc
+
+OTHER_FILES += \
+    templates/latex.template

@@ -33,6 +33,8 @@ private slots:
     void textEditorTextChanged();
     void previewScrollerMouseWheelEvent( QWheelEvent *event );
 
+    void configurationSettingsChanged();
+
 public:
     DocumentEditor( DocumentType type, const QString &name = "", const QString &initialContent = "", QWidget *parent = 0 );
     ~DocumentEditor();
