@@ -80,6 +80,10 @@ bool DocumentLatex::compile()
     cmdArguments.append( "--scale=2" );
     cmdArguments.append( "latex.dvi" );
 
+#if DEBUG
+    sleep( 1 );
+#endif
+
     cmd.start( settingsProvider()->dvisvgmBinary(), cmdArguments );
     if( ! cmd.waitForFinished() || cmd.exitCode() != 0 )
     {

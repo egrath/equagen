@@ -27,7 +27,8 @@ SOURCES += \
     PreviewScrollArea.cxx \
     DocumentLatex.cxx \
     DocumentFactory.cxx \
-    SvgUtils.cxx
+    SvgUtils.cxx \
+    ProgressIndicator.cxx
 
 HEADERS += \
     Document.h \
@@ -45,13 +46,15 @@ HEADERS += \
     PreviewScrollArea.h \
     DocumentLatex.h \
     DocumentFactory.h \
-    SvgUtils.h
+    SvgUtils.h \
+    ProgressIndicator.h
 
 FORMS += \
     MainWindow.ui \
     DocumentEditor.ui \
     ErrorLog.ui \
-    SettingsDialog.ui
+    SettingsDialog.ui \
+    ProgressIndicator.ui
 
 RESOURCES += \
     equagen.qrc

@@ -6,6 +6,7 @@
 #include "ClipboardManager.h"
 #include "SettingsProvider.h"
 #include "DocumentFactory.h"
+#include "ProgressIndicator.h"
 
 #include "ui_DocumentEditor.h"
 
@@ -19,6 +20,7 @@ private:
     Renderer *m_Renderer;
     Document *m_Document;
     SettingsProvider *m_Settings;
+    ProgressIndicator *m_ProgressIndicator;
 
     bool m_IsModified;
     bool m_CanCompile;

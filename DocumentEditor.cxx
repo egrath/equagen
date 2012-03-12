@@ -125,6 +125,9 @@ DocumentEditor::DocumentEditor( DocumentType type, const QString &name, const QS
 
     // Set default clipboard copy type to SVG
     setClipboardCopyMode( CCT_SVG );
+
+    // Create the Progress Indicator (used to show compile status)
+    m_ProgressIndicator = new ProgressIndicator( this );
 }
 
 DocumentEditor::~DocumentEditor()
@@ -138,6 +141,8 @@ bool DocumentEditor::compile()
     // came here
     if( ! canCompile() )
         return false;
+
+    // Display Progress indicator
 
     try
     {
