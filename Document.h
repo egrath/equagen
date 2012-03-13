@@ -24,8 +24,10 @@ enum DocumentType
     DT_INVALID
 };
 
-class Document
+class Document : public QObject
 {
+    Q_OBJECT
+
 private:
     QString m_PlainContent;
     QString m_Name;
@@ -76,6 +78,9 @@ public:
 
     // Get the type of the current Document
     const DocumentType & documentType() const;
+
+signals:
+    void compilationStep( const QString &message, int step );
 };
 
 #endif // DOCUMENT_H

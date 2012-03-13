@@ -6,6 +6,7 @@
 #include "DocumentEditor.h"
 #include "ErrorLog.h"
 #include "SettingsDialog.h"
+#include "ProgressIndicator.h"
 
 #include "ui_MainWindow.h"
 
@@ -19,6 +20,8 @@ private:
     QLabel *m_StatusLabel;
     QComboBox *m_CopySelectorComboBox;
     QComboBox *m_TemplateSelectorComboBox;
+
+    ProgressIndicator *m_ProgressIndicator;
 
     // Document stuff
     DocumentEditor *m_ActiveDocument;
@@ -62,6 +65,14 @@ private slots:
     void menuAddSketchDocumentPressed();
 
     void toolbarCopyModeSelectorIndexChanged( const QString &copyMode );
+
+    // For document compilation progress indicator
+    void compilationStep( const QString &message, int step );
+    void showProgressIndicator();
+
+protected:
+    void resizeEvent( QResizeEvent *event );
+    void showEvent( QShowEvent *event );
 
 public:
     MainWindow();

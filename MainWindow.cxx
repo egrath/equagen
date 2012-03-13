@@ -154,6 +154,18 @@ bool MainWindow::exportCurrentDocument( ImageType type )
 void MainWindow::buttonCompilePressed( bool checked )
 {
     qDebug() << "Compile button";
+
+    // Connect the signals to receive compilation step changes
+    QObject::connect( m_ActiveDocument, SIGNAL(compilationStep(QString,int)),this,SLOT(compilationStep(QString,int)));
+
+    // Disable the User Interface
+    setEnabled( false );
+
+    // If compilation took more than 500 msec's show the progress indicator dialog
+    QTimer compilationTimeout;
+    QObject::connect( &compilationTimeout, SIGNAL(timeout()), this, SLOT(showProgressIndicator()));
+    compilationTimeout.start( 500 );
+
     if( ! m_ActiveDocument->compile() )
     {
         m_UserInterface->buttonErrorLog->setEnabled( true );
@@ -162,6 +174,16 @@ void MainWindow::buttonCompilePressed( bool checked )
         m_UserInterface->buttonErrorLog->setEnabled( false );
         m_UserInterface->buttonCopyClipboard->setEnabled( true );
     }
+
+    // Disconnect the signal again
+    QObject::disconnect( m_ActiveDocument, SIGNAL(compilationStep(QString,int)), this, SLOT(compilationStep(QString,int)));
+
+    // Enable the user interface
+    setEnabled( true );
+    m_ProgressIndicator->hide();
+
+    // Set the Editor widget focused
+    m_ActiveDocument->focusInputTextbox();
 }
 
 void MainWindow::buttonErrorLogPressed( bool checked )
@@ -357,12 +379,46 @@ void MainWindow::setStatusMessage( bool enabled, const QString &message, const Q
     m_StatusLabel->setText( message );
 }
 
+void MainWindow::compilationStep(const QString &message, int step)
+{
+    qDebug() << "MainWindow::compilationStep";
+    m_ProgressIndicator->setStatus( message, step );
+}
+
+void MainWindow::showProgressIndicator()
+{
+    // Show the progress indicator if it's not visible already
+    if( ! m_ProgressIndicator->isVisible() )
+    {
+        m_ProgressIndicator->show();
+    }
+}
+
+// PROTECTED
+void MainWindow::resizeEvent( QResizeEvent *event )
+{
+    QMainWindow::resizeEvent( event );
+
+    // Recenter the progress indicator to have it's new
+    // centered position above everything else
+    m_ProgressIndicator->centerOnParent();
+}
+
+void MainWindow::showEvent( QShowEvent *event )
+{
+    QMainWindow::showEvent( event );
+    m_ActiveDocument->focusInputTextbox();
+}
+
 // PUBLIC
 MainWindow::MainWindow() : QMainWindow( 0 ), m_TabCounter(0)
 {
     setupUserInterface();       
     addDocumentTab( DT_LATEX, generateEmptyTabName() );
     addAdderTab();
+
+    m_ProgressIndicator = new ProgressIndicator( this );
+    m_ProgressIndicator->hide();
 
     m_ErrorLog = new ErrorLog();
     m_ErrorLog->setWindowModality( Qt::ApplicationModal );

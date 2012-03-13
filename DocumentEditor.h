@@ -6,7 +6,7 @@
 #include "ClipboardManager.h"
 #include "SettingsProvider.h"
 #include "DocumentFactory.h"
-#include "ProgressIndicator.h"
+#include "DocumentCompiler.h"
 
 #include "ui_DocumentEditor.h"
 
@@ -20,7 +20,6 @@ private:
     Renderer *m_Renderer;
     Document *m_Document;
     SettingsProvider *m_Settings;
-    ProgressIndicator *m_ProgressIndicator;
 
     bool m_IsModified;
     bool m_CanCompile;
@@ -36,6 +35,8 @@ private slots:
     void previewScrollerMouseWheelEvent( QWheelEvent *event );
 
     void configurationSettingsChanged();
+
+    void compilationStepHandler( const QString &message, int step );
 
 public:
     DocumentEditor( DocumentType type, const QString &name = "", const QString &initialContent = "", QWidget *parent = 0 );
@@ -69,6 +70,9 @@ public:
     // Type of underlaying Document
     const DocumentType & documentType() const;
 
+    // Set focus to the input text box
+    void focusInputTextbox();
+
     // Zoom operations
     qreal zoomIn();
     qreal zoomOut();
@@ -76,6 +80,7 @@ public:
 
 signals:
     void documentStatusChanged();
+    void compilationStep( const QString &message, int step );
 };
 
 #endif // DOCUMENTEDITOR_H

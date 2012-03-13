@@ -58,6 +58,12 @@ void DocumentEditor::configurationSettingsChanged()
     qDebug() << "DocumentEditor: configuration settings changed";
 }
 
+// Event handler for document compilation status changed
+void DocumentEditor::compilationStepHandler(const QString &message, int step)
+{
+    emit compilationStep( message, step );
+}
+
 // PUBLIC
 void DocumentEditor::copyImageToClipboard() const
 {
@@ -100,6 +106,7 @@ DocumentEditor::DocumentEditor( DocumentType type, const QString &name, const QS
     try
     {
         m_Document = DocumentFactory::instance()->createDocument( type );
+        QObject::connect( m_Document, SIGNAL(compilationStep(QString,int)), this, SLOT(compilationStepHandler(QString,int)));
     }
     catch( QString *msg )
     {
@@ -125,9 +132,6 @@ DocumentEditor::DocumentEditor( DocumentType type, const QString &name, const QS
 
     // Set default clipboard copy type to SVG
     setClipboardCopyMode( CCT_SVG );
-
-    // Create the Progress Indicator (used to show compile status)
-    m_ProgressIndicator = new ProgressIndicator( this );
 }
 
 DocumentEditor::~DocumentEditor()
@@ -142,15 +146,18 @@ bool DocumentEditor::compile()
     if( ! canCompile() )
         return false;
 
-    // Display Progress indicator
+    // Start a new thread which does the actual compilation
+    DocumentCompiler compiler( m_Document );
+    compiler.start();
 
-    try
+    // Wait until the thread has finished
+    while( compiler.isRunning() )
+        QApplication::processEvents();
+
+    // Check for errors
+    if( compiler.finishedWithError() )
     {
-        m_Document->compile();
-    }
-    catch( QString *exception )
-    {
-        qDebug() << "Got exception: " << *exception;
+        qDebug() << "Compiler error message: " << compiler.compilerErrorMessage();
 
         QMessageBox errorBox( QMessageBox::Critical, "Compilation failed", "Compilation failed, check log",
                               QMessageBox::Ok );
@@ -271,6 +278,11 @@ bool DocumentEditor::exportDocumentToFile( ImageType type, const QString &fileNa
 const DocumentType & DocumentEditor::documentType() const
 {
     return m_Document->documentType();
+}
+
+void DocumentEditor::focusInputTextbox()
+{
+    m_UserInterface->textEditTex->setFocus( Qt::OtherFocusReason );
 }
 
 qreal DocumentEditor::zoomIn()

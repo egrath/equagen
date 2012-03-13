@@ -28,7 +28,8 @@ SOURCES += \
     DocumentLatex.cxx \
     DocumentFactory.cxx \
     SvgUtils.cxx \
-    ProgressIndicator.cxx
+    ProgressIndicator.cxx \
+    DocumentCompiler.cxx
 
 HEADERS += \
     Document.h \
@@ -47,7 +48,8 @@ HEADERS += \
     DocumentLatex.h \
     DocumentFactory.h \
     SvgUtils.h \
-    ProgressIndicator.h
+    ProgressIndicator.h \
+    DocumentCompiler.h
 
 FORMS += \
     MainWindow.ui \

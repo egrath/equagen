@@ -37,6 +37,8 @@ bool DocumentLatex::compile()
     qDebug() << "Document::compile";
 
     // Create temporary directory for tex commands output
+    emit compilationStep( "Building representation", 10 );
+
     QDir tempDir( QString( "%1/eq.%2" ).arg( QDir::tempPath() ).arg( qrand() ));
     if( ! tempDir.exists() )
         tempDir.mkpath( tempDir.path() );
@@ -54,6 +56,8 @@ bool DocumentLatex::compile()
     qDebug() << "----------- TEX FILE END ----------------";
 
     // Compile LaTeX to DVI
+    emit compilationStep( "Compiling LaTex", 40 );
+
     QProcess cmd;
     cmd.setWorkingDirectory( tempDir.path() );
     cmd.setProcessChannelMode( QProcess::MergedChannels );
@@ -72,6 +76,8 @@ bool DocumentLatex::compile()
     }
 
     // Convert DVI to SVG
+    emit compilationStep( "Converting DVI to SVG", 80 );
+
     cmdArguments.clear();
     cmdArguments.append( "--output=equation.svg" );
     cmdArguments.append( "--no-fonts" );
@@ -79,10 +85,6 @@ bool DocumentLatex::compile()
     cmdArguments.append( "--exact" );
     cmdArguments.append( "--scale=2" );
     cmdArguments.append( "latex.dvi" );
-
-#if DEBUG
-    sleep( 1 );
-#endif
 
     cmd.start( settingsProvider()->dvisvgmBinary(), cmdArguments );
     if( ! cmd.waitForFinished() || cmd.exitCode() != 0 )
@@ -101,6 +103,8 @@ bool DocumentLatex::compile()
     svgFile.close();
 
     // Convert the SVG to PNG
+    emit compilationStep( "Converting SVG to PNG", 90 );
+
     QByteArray *rawPng = SvgUtils::rasterSvgToPng( *( m_Svg->rawContent() ));
     m_Png = new PngImage( *rawPng );
     delete rawPng;
@@ -117,5 +121,7 @@ bool DocumentLatex::compile()
     tempDir.rmdir( tempDir.path() );
 
     setDocumentValid( true );
+    emit compilationStep( "Finished", 100 );
+
     return true;
 }

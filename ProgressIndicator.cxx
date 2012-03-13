@@ -9,17 +9,6 @@ void ProgressIndicator::setupUserInterface()
     //this->setVisible( false );
 }
 
-void ProgressIndicator::centerOnParent()
-{
-    QSize parentSize = this->parentWidget()->size();
-    QPoint newPosition;
-
-    newPosition.setX( parentSize.width() / 2 - this->size().width() / 2 );
-    newPosition.setY( parentSize.height() / 2 - this->size().height() / 2 - 100 );
-
-    this->move( newPosition );
-}
-
 // PUBLIC
 ProgressIndicator::ProgressIndicator(QWidget *parent) : QWidget( parent )
 {
@@ -32,6 +21,17 @@ ProgressIndicator::ProgressIndicator(QWidget *parent) : QWidget( parent )
 ProgressIndicator::~ProgressIndicator()
 {
     delete m_UserInterface;
+}
+
+void ProgressIndicator::centerOnParent()
+{
+    QSize parentSize = this->parentWidget()->size();
+    QPoint newPosition;
+
+    newPosition.setX( parentSize.width() / 2 - this->size().width() / 2 );
+    newPosition.setY( parentSize.height() / 2 - this->size().height() / 2 - 100 );
+
+    this->move( newPosition );
 }
 
 void ProgressIndicator::setStatus( const QString &text, int step )
