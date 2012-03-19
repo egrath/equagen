@@ -36,6 +36,12 @@ bool DocumentLatex::compile()
 {
     qDebug() << "Document::compile";
 
+    // Create original source structure
+    OriginalSource source;
+    source.Type = "latex";
+    source.Template = m_TexTemplate;
+    source.Source = plainContent();
+
     // Create temporary directory for tex commands output
     emit compilationStep( "Building representation", 10 );
 
@@ -100,6 +106,10 @@ bool DocumentLatex::compile()
     if( m_Svg != 0 )
         delete m_Svg;
     m_Svg = new SvgImage( svgFile.readAll() );
+    m_Svg->setOriginalSource( source );
+
+    qDebug() << m_Svg->originalSource().Template;
+
     svgFile.close();
 
     // Convert the SVG to PNG
@@ -107,6 +117,8 @@ bool DocumentLatex::compile()
 
     QByteArray *rawPng = SvgUtils::rasterSvgToPng( *( m_Svg->rawContent() ));
     m_Png = new PngImage( *rawPng );
+    m_Png->setOriginalSource( source );
+
     delete rawPng;
 
     // Remove temporary files

@@ -9,7 +9,7 @@ win32 {
     CONFIG += console
 }
 
-QT += svg
+QT += svg xml
 
 SOURCES += \
     main.cxx \
@@ -49,7 +49,8 @@ HEADERS += \
     DocumentFactory.h \
     SvgUtils.h \
     ProgressIndicator.h \
-    DocumentCompiler.h
+    DocumentCompiler.h \
+    OriginalSource.h
 
 FORMS += \
     MainWindow.ui \
