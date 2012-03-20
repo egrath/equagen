@@ -3,6 +3,8 @@
 
 #include <QImage>
 #include <QBuffer>
+#include <QUrl>
+#include <QDebug>
 #include "BaseImage.h"
 
 class PngImage : public BaseImage

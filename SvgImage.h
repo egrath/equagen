@@ -5,6 +5,7 @@
 #include <QTextStream>
 #include <QDebug>
 #include <QXmlReader>
+#include <QUrl>
 
 #include "BaseImage.h"
 

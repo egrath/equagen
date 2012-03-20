@@ -29,7 +29,8 @@ SOURCES += \
     DocumentFactory.cxx \
     SvgUtils.cxx \
     ProgressIndicator.cxx \
-    DocumentCompiler.cxx
+    DocumentCompiler.cxx \
+    DocumentImporter.cxx
 
 HEADERS += \
     Document.h \
@@ -50,7 +51,8 @@ HEADERS += \
     SvgUtils.h \
     ProgressIndicator.h \
     DocumentCompiler.h \
-    OriginalSource.h
+    OriginalSource.h \
+    DocumentImporter.h
 
 FORMS += \
     MainWindow.ui \

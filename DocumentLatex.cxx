@@ -107,9 +107,6 @@ bool DocumentLatex::compile()
         delete m_Svg;
     m_Svg = new SvgImage( svgFile.readAll() );
     m_Svg->setOriginalSource( source );
-
-    qDebug() << m_Svg->originalSource().Template;
-
     svgFile.close();
 
     // Convert the SVG to PNG

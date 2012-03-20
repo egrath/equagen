@@ -4,6 +4,7 @@
 #include <QtGui>
 
 #include "DocumentEditor.h"
+#include "DocumentImporter.h"
 #include "ErrorLog.h"
 #include "SettingsDialog.h"
 #include "ProgressIndicator.h"
@@ -33,7 +34,7 @@ private:
 
     void setupUserInterface();
     void setupToolbar();
-    void addDocumentTab( DocumentType type, const QString &name );
+    DocumentEditor * addDocumentTab( DocumentType type, const QString &name );
     void addAdderTab();
 
     QString generateEmptyTabName();
@@ -42,6 +43,7 @@ private:
     void setStatusMessage( bool enabled, const QString &message = "", const QColor & color = QColor( 0, 0, 0 ));
 
     bool exportCurrentDocument( ImageType type );
+    bool importDocument();
 
 private slots:
     void buttonCompilePressed( bool checked );
@@ -55,6 +57,7 @@ private slots:
     void menuFileQuitPressed( bool checked );
     void menuFileExportSvgPressed( bool checked );
     void menuFileExportPngPressed( bool checked );
+    void menuFileImportPressed( bool checked );
     void menuEditOptionsPressed( bool checked );
 
     void menuViewZoomInPressed( bool checked );

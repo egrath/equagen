@@ -23,6 +23,7 @@ void MainWindow::setupUserInterface()
     QObject::connect( m_UserInterface->actionFileQuit, SIGNAL( triggered( bool )), this, SLOT( menuFileQuitPressed(bool)));
     QObject::connect( m_UserInterface->actionFileExportPng, SIGNAL(triggered(bool)), this, SLOT(menuFileExportPngPressed(bool)));
     QObject::connect( m_UserInterface->actionFileExportSvg, SIGNAL(triggered(bool)), this, SLOT(menuFileExportSvgPressed(bool)));
+    QObject::connect( m_UserInterface->actionFileImport, SIGNAL( triggered( bool )), this, SLOT( menuFileImportPressed(bool)));
 
     // Connect View Items
     QObject::connect( m_UserInterface->actionViewZoomIn, SIGNAL( triggered( bool )), this, SLOT( menuViewZoomInPressed(bool)));
@@ -62,7 +63,7 @@ void MainWindow::setupToolbar()
 }
 
 // Insert a new Document Editor Tab
-void MainWindow::addDocumentTab( DocumentType type, const QString &name )
+DocumentEditor * MainWindow::addDocumentTab( DocumentType type, const QString &name )
 {
     qDebug() << "MainWindow::addDocumentTab";
 
@@ -88,6 +89,8 @@ void MainWindow::addDocumentTab( DocumentType type, const QString &name )
 
     // Tell Document Editor's input widget to take the focus
     editor->setFocus( Qt::TabFocusReason );
+
+    return editor;
 }
 
 void MainWindow::addAdderTab()
@@ -120,6 +123,7 @@ bool MainWindow::exportCurrentDocument( ImageType type )
     static QString previousFolder = QDir( QDir::currentPath() ).dirName();
     QFileDialog saveAsDialog( this );
     saveAsDialog.setAcceptMode( QFileDialog::AcceptSave );
+    saveAsDialog.setDirectory( previousFolder );
 
     if( type == IT_SVG )
     {
@@ -145,6 +149,45 @@ bool MainWindow::exportCurrentDocument( ImageType type )
             fileName.append( ".png" );
 
         m_ActiveDocument->exportDocumentToFile( type, fileName );
+    }
+
+    return false;
+}
+
+bool MainWindow::importDocument()
+{
+    static QString previousFolder = QDir( QDir::currentPath() ).dirName();
+    QFileDialog openDialog( this );
+    openDialog.setDirectory( previousFolder );
+    openDialog.setAcceptMode( QFileDialog::AcceptOpen );
+    openDialog.setWindowTitle( "Import document" );
+    openDialog.setNameFilter( "Supported files (*.png *.svg)" );
+
+    if( openDialog.exec() == QFileDialog::Accepted )
+    {
+        QString fileName = openDialog.selectedFiles().at( 0 );
+        DocumentImporter importer( fileName );
+        if( ! importer.parse() )
+        {
+            QMessageBox mb( QMessageBox::Critical, "Failed to import", "The specified file has not been produced by us", QMessageBox::Ok, this );
+            mb.exec();
+
+            return false;
+        }
+
+        // Create a new tab with the file content if the current document has been modified and is
+        // not compilable
+        DocumentEditor *editor = addDocumentTab( importer.type(), QFileInfo( fileName ).fileName() );
+        editor->setDocumentFromSource( importer.source() );
+
+        qDebug() << "Imported-Template: " << importer.source().Template;
+        qDebug() << "Imported-Source  : " << importer.source().Source;
+        qDebug() << "Imported-Type    : " << importer.source().Type;
+
+        // Compile the document
+        buttonCompilePressed( false );
+
+        return true;
     }
 
     return false;
@@ -261,6 +304,12 @@ void MainWindow::menuFileExportPngPressed( bool checked )
 {
     qDebug() << "MainWindow: Export as PNG";
     exportCurrentDocument( IT_PNG );
+}
+
+void MainWindow::menuFileImportPressed( bool checked )
+{
+    qDebug() << "MainWindow: Import document";
+    importDocument();
 }
 
 void MainWindow::menuEditOptionsPressed( bool checked )

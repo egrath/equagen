@@ -125,6 +125,7 @@
      <addaction name="actionFileExportPng"/>
     </widget>
     <addaction name="menu_Export"/>
+    <addaction name="actionFileImport"/>
     <addaction name="actionFileQuit"/>
    </widget>
    <widget class="QMenu" name="menu_Edit">
@@ -254,6 +255,18 @@
    </property>
    <property name="text">
     <string>PNG</string>
+   </property>
+   <property name="iconVisibleInMenu">
+    <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionFileImport">
+   <property name="icon">
+    <iconset resource="equagen.qrc">
+     <normaloff>:/icons/import-document.svg</normaloff>:/icons/import-document.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Import</string>
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>

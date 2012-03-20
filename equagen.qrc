@@ -14,6 +14,7 @@
         <file alias="export-document">extlib/elementary/actions/48/document-export.svg</file>
         <file alias="latex-symbol.svg">extlib/elementary/mimes/48/font-x-generic.svg</file>
         <file alias="sketch-symbol.svg">extlib/elementary/mimes/48/x-office-drawing.svg</file>
+        <file alias="import-document.svg">extlib/elementary/actions/48/document-import.svg</file>
     </qresource>
     <qresource prefix="/templates">
         <file alias="latex.template">templates/latex.template</file>

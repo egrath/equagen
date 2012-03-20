@@ -248,6 +248,22 @@ const ClipboardCopyType & DocumentEditor::clipboardCopyMode() const
     return m_ClipboardCopyType;
 }
 
+bool DocumentEditor::setDocumentFromSource( const OriginalSource & source )
+{
+    // Set source text in editor
+    m_UserInterface->textEditTex->clear();
+    m_UserInterface->textEditTex->textCursor().insertText( source.Source );
+
+    // Set source (and template) in document
+    m_Document->setPlainContent( source.Source );
+    if( m_Document->documentType() == DT_LATEX )
+    {
+        (( DocumentLatex * ) m_Document )->setTexTemplate( source.Template );
+    }
+
+    return true;
+}
+
 bool DocumentEditor::exportDocumentToFile( ImageType type, const QString &fileName )
 {
     QFile exportFile( fileName );

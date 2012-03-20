@@ -67,6 +67,9 @@ public:
     // Export document to file
     bool exportDocumentToFile( ImageType type, const QString &fileName );
 
+    // Import document from file
+    bool setDocumentFromSource( const OriginalSource &source );
+
     // Type of underlaying Document
     const DocumentType & documentType() const;
 

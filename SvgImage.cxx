@@ -11,11 +11,12 @@ void SvgImage::setOriginalSource(const OriginalSource &source)
     QDomDocument document;
     document.setContent( *rawContent(), false );
 
+    QUrl urlEncoder;
     QDomElement metadata = document.createElement( "metadata" );
     QDomElement original = document.createElement( "equagen-sourcecode" );
-    original.setAttribute( "X-ORIGIN-TYPE", source.Type );
-    original.setAttribute( "X-ORIGIN-TEMPLATE", source.Template );
-    original.setAttribute( "X-ORIGIN-SOURCE", source.Source );
+    original.setAttribute( "X-ORIGIN-TYPE", QString( urlEncoder.toPercentEncoding( source.Type )));
+    original.setAttribute( "X-ORIGIN-TEMPLATE", QString( urlEncoder.toPercentEncoding( source.Template )));
+    original.setAttribute( "X-ORIGIN-SOURCE",QString( urlEncoder.toPercentEncoding( source.Source )));
     metadata.appendChild( original );
     document.firstChildElement( "svg" ).appendChild( metadata );
 
@@ -40,9 +41,10 @@ const OriginalSource SvgImage::originalSource() const
     QDomElement sourceElement = path.toElement();
     if( ! sourceElement.isNull() )
     {
-        source.Type = sourceElement.attribute( "X-ORIGIN-TYPE" );
-        source.Template = sourceElement.attribute( "X-ORIGIN-TEMPLATE" );
-        source.Source = sourceElement.attribute( "X-ORIGIN-SOURCE" );
+        QUrl urlDecoder;
+        source.Type = urlDecoder.fromPercentEncoding( sourceElement.attribute( "X-ORIGIN-TYPE" ).toUtf8() );
+        source.Template = urlDecoder.fromPercentEncoding( sourceElement.attribute( "X-ORIGIN-TEMPLATE" ).toUtf8() );
+        source.Source = urlDecoder.fromPercentEncoding( sourceElement.attribute( "X-ORIGIN-SOURCE" ).toUtf8() );
     }
 
     return source;
