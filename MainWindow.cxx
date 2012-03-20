@@ -30,6 +30,9 @@ void MainWindow::setupUserInterface()
     QObject::connect( m_UserInterface->actionViewZoomOut, SIGNAL(triggered(bool)), this, SLOT(menuViewZoomOutPressed(bool)));
     QObject::connect( m_UserInterface->actionViewNormalSize, SIGNAL( triggered(bool)),this,SLOT(menuViewZoomOriginalPressed(bool)));
 
+    // Connect About menu
+    QObject::connect( m_UserInterface->actionHelpAbout, SIGNAL( triggered( bool )), this, SLOT( menuHelpAboutPressed(bool)));
+
     // Build the Toolbar
     setupToolbar();
 }
@@ -355,6 +358,14 @@ void MainWindow::menuAddSketchDocumentPressed()
 {
     qDebug() << "MainWindow: Adding Sketch Document Tab";
     addDocumentTab( DT_SKETCH, generateEmptyTabName() );
+}
+
+void MainWindow::menuHelpAboutPressed( bool checked )
+{
+    qDebug() << "MainWindow: Showing About dialog";
+
+    AboutDialog aboutDialog( this );
+    aboutDialog.exec();
 }
 
 void MainWindow::toolbarCopyModeSelectorIndexChanged( const QString &copyMode )

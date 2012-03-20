@@ -8,6 +8,7 @@
 #include "ErrorLog.h"
 #include "SettingsDialog.h"
 #include "ProgressIndicator.h"
+#include "AboutDialog.h"
 
 #include "ui_MainWindow.h"
 
@@ -63,6 +64,8 @@ private slots:
     void menuViewZoomInPressed( bool checked );
     void menuViewZoomOutPressed( bool checked );
     void menuViewZoomOriginalPressed( bool checked );    
+
+    void menuHelpAboutPressed( bool checked );
 
     void menuAddLatexDocumentPressed();
     void menuAddSketchDocumentPressed();

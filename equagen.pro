@@ -30,7 +30,8 @@ SOURCES += \
     SvgUtils.cxx \
     ProgressIndicator.cxx \
     DocumentCompiler.cxx \
-    DocumentImporter.cxx
+    DocumentImporter.cxx \
+    AboutDialog.cxx
 
 HEADERS += \
     Document.h \
@@ -52,14 +53,16 @@ HEADERS += \
     ProgressIndicator.h \
     DocumentCompiler.h \
     OriginalSource.h \
-    DocumentImporter.h
+    DocumentImporter.h \
+    AboutDialog.h
 
 FORMS += \
     MainWindow.ui \
     DocumentEditor.ui \
     ErrorLog.ui \
     SettingsDialog.ui \
-    ProgressIndicator.ui
+    ProgressIndicator.ui \
+    AboutDialog.ui
 
 RESOURCES += \
     equagen.qrc
