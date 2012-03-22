@@ -9,7 +9,36 @@ void DocumentEditor::setupUserInterface()
     QObject::connect( m_UserInterface->textEditTex, SIGNAL(textChanged()), this, SLOT(textEditorTextChanged()));
 
     // Connect mouse wheel event of Preview scroll area
-    QObject::connect( m_UserInterface->scrollArea, SIGNAL(mouseWheelEvent(QWheelEvent*)), this, SLOT( previewScrollerMouseWheelEvent(QWheelEvent*)));
+    QObject::connect( m_UserInterface->scrollArea, SIGNAL(mouseWheelEvent(QWheelEvent*)), this, SLOT( previewScrollerMouseWheelEvent(QWheelEvent*)));    
+
+    // Splitter drag handle
+    QObject::connect( m_UserInterface->splitterPane, SIGNAL(splitterMoved(int,int)), this, SLOT(splitterPaneHandleMoved(int,int)));
+}
+
+// Makes the splitter pane's children equally sized
+void DocumentEditor::setupSplitterPane()
+{
+    QList<int> paneSizes;
+    QSplitter *splitter = m_UserInterface->splitterPane;
+
+    if( m_TextEditorWidth == -1 )
+    {
+        // Make the Text Editor 30 chars width per default
+        QFontMetrics fontMetric( m_UserInterface->textEditTex->font() );
+        int charWidth = fontMetric.width( 'A' );
+
+        qDebug() << "DocumentEditor: Setting Text Editor width to " << charWidth * 30 << " because one char is " << charWidth << " pixels wide";
+        m_TextEditorWidth = charWidth * 30;
+    }
+
+    QSize splitterSize = splitter->size();
+    int left = m_TextEditorWidth;
+    int right = splitterSize.width() - left;
+
+    paneSizes.append( left );
+    paneSizes.append( right );
+
+    splitter->setSizes( paneSizes );
 }
 
 // Special helper method to return a image with a 1 pixel border
@@ -64,6 +93,30 @@ void DocumentEditor::compilationStepHandler(const QString &message, int step)
     emit compilationStep( message, step );
 }
 
+// Splitter pane handle moved
+void DocumentEditor::splitterPaneHandleMoved(int pos, int index)
+{
+    qDebug() << "Splitter pane moved to pos: " << pos;
+    m_TextEditorWidth = pos;
+}
+
+// PROTECTED
+void DocumentEditor::showEvent( QShowEvent *event )
+{
+    qDebug() << "DocumentEditor::showEvent";
+    QWidget::showEvent( event );
+
+    setupSplitterPane();
+}
+
+void DocumentEditor::resizeEvent( QResizeEvent *event )
+{
+    qDebug() << "DocumentEditor::resizeEvent to " << event->size();
+    QWidget::resizeEvent( event );
+
+    setupSplitterPane();
+}
+
 // PUBLIC
 void DocumentEditor::copyImageToClipboard() const
 {
@@ -98,7 +151,7 @@ void DocumentEditor::copyImageToClipboard() const
     }
 }
 
-DocumentEditor::DocumentEditor( DocumentType type, const QString &name, const QString &initialContent, QWidget *parent ) : QWidget( parent )
+DocumentEditor::DocumentEditor( DocumentType type, const QString &name, const QString &initialContent, QWidget *parent ) : QWidget( parent ), m_TextEditorWidth( -1 )
 {
     setupUserInterface();
 

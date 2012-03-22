@@ -20,6 +20,7 @@ private:
     Renderer *m_Renderer;
     Document *m_Document;
     SettingsProvider *m_Settings;
+    int m_TextEditorWidth;
 
     bool m_IsModified;
     bool m_CanCompile;
@@ -28,15 +29,22 @@ private:
     ClipboardCopyType m_ClipboardCopyType;
 
     void setupUserInterface();
-    QImage preparePngImageForClipboard() const;
+    void setupSplitterPane();
+
+    QImage preparePngImageForClipboard() const;   
 
 private slots:
     void textEditorTextChanged();
     void previewScrollerMouseWheelEvent( QWheelEvent *event );
+    void splitterPaneHandleMoved( int pos, int index );
 
     void configurationSettingsChanged();
 
     void compilationStepHandler( const QString &message, int step );
+
+protected:
+    virtual void showEvent( QShowEvent *event );
+    virtual void resizeEvent( QResizeEvent *event );
 
 public:
     DocumentEditor( DocumentType type, const QString &name = "", const QString &initialContent = "", QWidget *parent = 0 );
@@ -79,7 +87,7 @@ public:
     // Zoom operations
     qreal zoomIn();
     qreal zoomOut();
-    qreal zoomNormal();
+    qreal zoomNormal();    
 
 signals:
     void documentStatusChanged();
