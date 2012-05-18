@@ -1,4 +1,4 @@
-#include "SettingsProvider.h"
+﻿#include "SettingsProvider.h"
 
 // Allocate memory for the instance
 SettingsProvider *SettingsProvider::m_Instance;
@@ -7,6 +7,7 @@ SettingsProvider *SettingsProvider::m_Instance;
 SettingsProvider::SettingsProvider()
 {
     m_Settings = new QSettings( "egrath", "equagen" );
+    qDebug() << "Settings path: " << m_Settings->fileName();
 }
 
 SettingsProvider::~SettingsProvider()
@@ -73,6 +74,29 @@ QFont SettingsProvider::editorFont() const
     return QFont( fontFamily, fontSize );
 }
 
+// Window geometry and state
+void SettingsProvider::setWindowGeometry( const QByteArray &geometry )
+{
+    m_Settings->setValue( "Window/geometry", geometry );
+    m_Settings->sync();
+}
+
+void SettingsProvider::setWindowState( const QByteArray &state )
+{
+    m_Settings->setValue( "Window/state", state );
+    m_Settings->sync();
+}
+
+QByteArray SettingsProvider::windowGeometry() const
+{
+    return m_Settings->value( "Window/geometry" ).toByteArray();
+}
+
+QByteArray SettingsProvider::windowState() const
+{
+    return m_Settings->value( "Window/state" ).toByteArray();
+}
+
 bool SettingsProvider::valid() const
 {
     if( latexBinary().length() > 0 &&
@@ -85,4 +109,3 @@ void SettingsProvider::setDirty()
 {
     emit configurationSettingsChanged();
 }
-

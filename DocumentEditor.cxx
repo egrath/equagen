@@ -1,4 +1,4 @@
-#include "DocumentEditor.h"
+﻿#include "DocumentEditor.h"
 
 void DocumentEditor::setupUserInterface()
 {
@@ -9,7 +9,7 @@ void DocumentEditor::setupUserInterface()
     QObject::connect( m_UserInterface->textEditTex, SIGNAL(textChanged()), this, SLOT(textEditorTextChanged()));
 
     // Connect mouse wheel event of Preview scroll area
-    QObject::connect( m_UserInterface->scrollArea, SIGNAL(mouseWheelEvent(QWheelEvent*)), this, SLOT( previewScrollerMouseWheelEvent(QWheelEvent*)));    
+    QObject::connect( m_UserInterface->scrollArea, SIGNAL(mouseWheelEvent(QWheelEvent*)), this, SLOT( previewScrollerMouseWheelEvent(QWheelEvent*)));
 
     // Splitter drag handle
     QObject::connect( m_UserInterface->splitterPane, SIGNAL(splitterMoved(int,int)), this, SLOT(splitterPaneHandleMoved(int,int)));
@@ -106,7 +106,7 @@ void DocumentEditor::showEvent( QShowEvent *event )
     qDebug() << "DocumentEditor::showEvent";
     QWidget::showEvent( event );
 
-    setupSplitterPane();
+    //setupSplitterPane();
 }
 
 void DocumentEditor::resizeEvent( QResizeEvent *event )

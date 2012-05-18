@@ -1,4 +1,4 @@
-#ifndef EQUATIONEDITOR_H
+﻿#ifndef EQUATIONEDITOR_H
 #define EQUATIONEDITOR_H
 
 #include <QtGui>
@@ -29,7 +29,7 @@ private:
     DocumentEditor *m_ActiveDocument;
     ErrorLog *m_ErrorLog;
 
-    SettingsProvider *m_Settings;    
+    SettingsProvider *m_Settings;
 
     int m_TabCounter;
 
@@ -63,7 +63,7 @@ private slots:
 
     void menuViewZoomInPressed( bool checked );
     void menuViewZoomOutPressed( bool checked );
-    void menuViewZoomOriginalPressed( bool checked );    
+    void menuViewZoomOriginalPressed( bool checked );
 
     void menuHelpAboutPressed( bool checked );
 
@@ -77,12 +77,13 @@ private slots:
     void showProgressIndicator();
 
 protected:
-    void resizeEvent( QResizeEvent *event );
-    void showEvent( QShowEvent *event );
+    virtual void closeEvent( QCloseEvent *event );
+    virtual void resizeEvent( QResizeEvent *event );
+    virtual void showEvent( QShowEvent *event );
 
 public:
     MainWindow();
-    ~MainWindow();   
+    ~MainWindow();
 };
 
 #endif // EQUATIONEDITOR_H

@@ -1,4 +1,4 @@
-#include "MainWindow.h"
+﻿#include "MainWindow.h"
 
 void MainWindow::setupUserInterface()
 {
@@ -375,6 +375,8 @@ void MainWindow::toolbarCopyModeSelectorIndexChanged( const QString &copyMode )
         newMode = CCT_SVG;
     else if( copyMode == "PNG" )
         newMode = CCT_PNG;
+    else
+        newMode = CCT_PNG;
 
     m_ActiveDocument->setClipboardCopyMode( newMode );
 }
@@ -455,6 +457,13 @@ void MainWindow::showProgressIndicator()
 }
 
 // PROTECTED
+void MainWindow::closeEvent( QCloseEvent *event )
+{
+    // Save the window geometry and state to the persistent configuration
+    m_Settings->setWindowGeometry( saveGeometry() );
+    m_Settings->setWindowState( saveState() );
+}
+
 void MainWindow::resizeEvent( QResizeEvent *event )
 {
     QMainWindow::resizeEvent( event );
@@ -468,12 +477,16 @@ void MainWindow::showEvent( QShowEvent *event )
 {
     QMainWindow::showEvent( event );
     m_ActiveDocument->focusInputTextbox();
+
+    // Restore window geometry and state
+    restoreGeometry( m_Settings->windowGeometry() );
+    restoreState( m_Settings->windowState() );
 }
 
 // PUBLIC
 MainWindow::MainWindow() : QMainWindow( 0 ), m_TabCounter(0)
 {
-    setupUserInterface();       
+    setupUserInterface();
     addDocumentTab( DT_LATEX, generateEmptyTabName() );
     addAdderTab();
 

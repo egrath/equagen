@@ -1,6 +1,7 @@
-#ifndef SETTINGSPROVIDER_H
+﻿#ifndef SETTINGSPROVIDER_H
 #define SETTINGSPROVIDER_H
 
+#include <QDebug>
 #include <QSettings>
 #include <QFont>
 
@@ -31,6 +32,12 @@ public:
     // Editor Font
     void setEditorFont( const QString &family, int pointSize );
     QFont editorFont() const;
+
+    // Window geometry and state
+    void setWindowGeometry( const QByteArray &geometry );
+    void setWindowState( const QByteArray &state );
+    QByteArray windowGeometry() const;
+    QByteArray windowState() const;
 
     bool valid() const; // True if the settings are valid
     void setDirty();    // Call if our settings have been modified
