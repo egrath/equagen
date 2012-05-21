@@ -1,4 +1,4 @@
-#include "PngImage.h"
+﻿#include "PngImage.h"
 
 PngImage::PngImage( const QByteArray &content ) : BaseImage( content )
 {
@@ -13,9 +13,9 @@ void PngImage::setOriginalSource( const OriginalSource &source )
     // Embed original sourcecode as metadata in PNG Image
     QUrl urlEncoder;
     QImage image = QImage::fromData( *rawContent() );
-    image.setText( "X-ORIGIN-TYPE", QString( urlEncoder.toPercentEncoding( source.Type )));
-    image.setText( "X-ORIGIN-TEMPLATE", QString( urlEncoder.toPercentEncoding( source.Template )));
-    image.setText( "X-ORIGIN-SOURCE", QString( urlEncoder.toPercentEncoding( source.Source )));
+    image.setText( "origin-type", QString( urlEncoder.toPercentEncoding( source.Type )));
+    image.setText( "origin-template", QString( urlEncoder.toPercentEncoding( source.Template )));
+    image.setText( "origin-source", QString( urlEncoder.toPercentEncoding( source.Source )));
 
     // Save modified image back to Byte array
     delete m_RawContent;
@@ -31,9 +31,9 @@ const OriginalSource PngImage::originalSource() const
     OriginalSource source;
     QImage image = QImage::fromData( *rawContent() );
 
-    source.Type = image.text( "X-ORIGIN-TYPE" );
-    source.Template = image.text( "X-ORIGIN-TEMPLATE" );
-    source.Source = image.text( "X-ORIGIN-SOURCE" );
+    source.Type = image.text( "origin-type" );
+    source.Template = image.text( "origin-template" );
+    source.Source = image.text( "origin-source" );
 
     return source;
 }

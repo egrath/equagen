@@ -1,4 +1,4 @@
-#ifndef SVGIMAGE_H
+﻿#ifndef SVGIMAGE_H
 #define SVGIMAGE_H
 
 #include <QDomDocument>
@@ -8,6 +8,7 @@
 #include <QUrl>
 
 #include "BaseImage.h"
+#include "SvgUtils.h"
 
 class SvgImage : public BaseImage
 {

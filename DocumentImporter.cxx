@@ -1,4 +1,4 @@
-#include "DocumentImporter.h"
+﻿#include "DocumentImporter.h"
 
 // PRIVATE
 bool DocumentImporter::parsePng()
@@ -8,9 +8,9 @@ bool DocumentImporter::parsePng()
     QImage img( m_File );
 
     QUrl urlDecoder;
-    m_Source.Type = urlDecoder.fromPercentEncoding( img.text( "X-ORIGIN-TYPE" ).toUtf8() );
-    m_Source.Template = urlDecoder.fromPercentEncoding( img.text( "X-ORIGIN-TEMPLATE" ).toUtf8() );
-    m_Source.Source = urlDecoder.fromPercentEncoding( img.text( "X-ORIGIN-SOURCE" ).toUtf8() );
+    m_Source.Type = urlDecoder.fromPercentEncoding( img.text( "origin-type" ).toUtf8() );
+    m_Source.Template = urlDecoder.fromPercentEncoding( img.text( "origin-template" ).toUtf8() );
+    m_Source.Source = urlDecoder.fromPercentEncoding( img.text( "origin-source" ).toUtf8() );
 
     if( m_Source.Type.isEmpty() || m_Source.Template.isEmpty() || m_Source.Source.isEmpty() )
         return false;
@@ -25,21 +25,15 @@ bool DocumentImporter::parseSvg()
     QFile inputFile( m_File );
     inputFile.open( QFile::ReadOnly );
 
+    // Build DOM representation of SVG
     QDomDocument document;
     document.setContent( inputFile.readAll() );
     inputFile.close();
 
-    // Search for source element
-    QDomNode path = document.namedItem( "svg" ).namedItem( "metadata" ).namedItem( "equagen-sourcecode" );
-    QDomElement sourceElement = path.toElement();
-    if( ! sourceElement.isNull() )
-    {
-        QUrl urlDecoder;
-        m_Source.Type = urlDecoder.fromPercentEncoding( sourceElement.attribute( "X-ORIGIN-TYPE" ).toUtf8() );
-        m_Source.Template = urlDecoder.fromPercentEncoding( sourceElement.attribute( "X-ORIGIN-TEMPLATE" ).toUtf8() );
-        m_Source.Source = urlDecoder.fromPercentEncoding( sourceElement.attribute( "X-ORIGIN-SOURCE" ).toUtf8() );
-    }
+    // Extract source from metadata in SVG DOM
+    m_Source = SvgUtils::extractOriginalSource( document );
 
+    // Check if everything went good
     if( m_Source.Type.isEmpty() || m_Source.Template.isEmpty() || m_Source.Source.isEmpty() )
         return false;
     else

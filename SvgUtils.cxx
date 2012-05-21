@@ -1,4 +1,4 @@
-#include "SvgUtils.h"
+﻿#include "SvgUtils.h"
 
 QByteArray * SvgUtils::rasterSvgToPng( const QByteArray &data, qreal scale )
 {
@@ -22,4 +22,37 @@ QByteArray * SvgUtils::rasterSvgToPng( const QByteArray &data, qreal scale )
     imageBuffer.close();
 
     return raw;
+}
+
+OriginalSource SvgUtils::extractOriginalSource(QDomDocument &document)
+{
+    QDomNodeList groupNodes = document.elementsByTagName( "g" );
+    QDomElement metadata;
+    bool foundMetadata = false;
+    for( int index = 0; index <= groupNodes.count()-1; index ++ )
+    {
+        metadata = groupNodes.at( index ).firstChildElement( "metadata" );
+        if( metadata.attribute( "creator" ).compare( "equagen" ) == 0 )
+        {
+            foundMetadata = true;
+            break;
+        }
+    }
+
+    OriginalSource source;
+    if( foundMetadata )
+        qDebug() << "found metadata";
+    else
+    {
+        qDebug() << "No metadata";
+        return source;
+    }
+
+    // Decode the values and store it
+    QUrl urlDecoder;
+    source.Template = urlDecoder.fromPercentEncoding( metadata.firstChildElement( "origin-template" ).text().toUtf8() );
+    source.Type = urlDecoder.fromPercentEncoding( metadata.firstChildElement( "origin-type" ).text().toUtf8() );
+    source.Source = urlDecoder.fromPercentEncoding( metadata.firstChildElement( "origin-source" ).text().toUtf8() );
+
+    return source;
 }

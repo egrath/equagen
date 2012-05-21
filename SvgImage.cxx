@@ -1,4 +1,4 @@
-#include "SvgImage.h"
+﻿#include "SvgImage.h"
 
 SvgImage::SvgImage( const QByteArray &content ) : BaseImage( content )
 {
@@ -12,13 +12,37 @@ void SvgImage::setOriginalSource(const OriginalSource &source)
     document.setContent( *rawContent(), false );
 
     QUrl urlEncoder;
-    QDomElement metadata = document.createElement( "metadata" );
-    QDomElement original = document.createElement( "equagen-sourcecode" );
-    original.setAttribute( "X-ORIGIN-TYPE", QString( urlEncoder.toPercentEncoding( source.Type )));
-    original.setAttribute( "X-ORIGIN-TEMPLATE", QString( urlEncoder.toPercentEncoding( source.Template )));
-    original.setAttribute( "X-ORIGIN-SOURCE",QString( urlEncoder.toPercentEncoding( source.Source )));
-    metadata.appendChild( original );
-    document.firstChildElement( "svg" ).appendChild( metadata );
+
+    // Build the Metadata Element and it's childs
+    QDomElement description = document.createElement( "metadata" );
+    description.setAttribute( "creator", "equagen" );
+    description.setAttribute( "id", "origin" );
+
+    QDomElement originType = document.createElement( "origin-type" );
+    originType.setAttribute( "id", "origin-type" );
+    originType.appendChild( document.createTextNode( QString( urlEncoder.toPercentEncoding( source.Type ))));
+
+    QDomElement originTemplate = document.createElement( "origin-template" );
+    originTemplate.setAttribute( "id", "origin-template" );
+    originTemplate.appendChild( document.createTextNode( QString( urlEncoder.toPercentEncoding( source.Template ))));
+
+    QDomElement originSource = document.createElement( "origin-source" );
+    originSource.setAttribute( "id", "origin-source" );
+    originSource.appendChild( document.createTextNode( QString( urlEncoder.toPercentEncoding( source.Source ))));
+
+    // Append Nodes to Description Element
+    description.appendChild( originType );
+    description.appendChild( originTemplate );
+    description.appendChild( originSource );
+
+    // Append the complete Description Node to the group Element
+    QDomNode group = document.elementsByTagName( "g" ).at( 0 );
+    if( group.hasAttributes() &&
+        group.attributes().item( 0 ).toAttr().name().compare( "id" ) == 0 &&
+        group.attributes().item( 0 ).toAttr().value().compare( "page1") == 0 )
+    {
+        group.appendChild( description );
+    }
 
     // Save
     delete m_RawContent;
@@ -31,21 +55,8 @@ void SvgImage::setOriginalSource(const OriginalSource &source)
 
 const OriginalSource SvgImage::originalSource() const
 {
-    OriginalSource source;
-
     QDomDocument document;
     document.setContent( *rawContent(), false );
 
-    // Search for source element
-    QDomNode path = document.namedItem( "svg" ).namedItem( "metadata" ).namedItem( "equagen-sourcecode" );
-    QDomElement sourceElement = path.toElement();
-    if( ! sourceElement.isNull() )
-    {
-        QUrl urlDecoder;
-        source.Type = urlDecoder.fromPercentEncoding( sourceElement.attribute( "X-ORIGIN-TYPE" ).toUtf8() );
-        source.Template = urlDecoder.fromPercentEncoding( sourceElement.attribute( "X-ORIGIN-TEMPLATE" ).toUtf8() );
-        source.Source = urlDecoder.fromPercentEncoding( sourceElement.attribute( "X-ORIGIN-SOURCE" ).toUtf8() );
-    }
-
-    return source;
+    return SvgUtils::extractOriginalSource( document );
 }

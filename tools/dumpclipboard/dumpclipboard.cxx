@@ -1,4 +1,4 @@
-#include <iostream>
+﻿#include <iostream>
 
 #include <QApplication>
 #include <QClipboard>
@@ -8,6 +8,7 @@
 #include <QFile>
 
 using std::cout;
+using std::cerr;
 using std::cin;
 using std::endl;
 
@@ -19,6 +20,11 @@ int main( int argc, char **argv )
     const QMimeData *data = clipboard->mimeData();
 
     QStringList formats = data->formats();
+    if( formats.count() <= 0 )
+    {
+        cerr << "No data in clipboard";
+        return -1;
+    }
     QStringList::iterator iter = formats.begin();
     int id = 1;
 
