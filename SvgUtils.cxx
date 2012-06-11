@@ -53,6 +53,7 @@ OriginalSource SvgUtils::extractOriginalSource(QDomDocument &document)
     source.Template = urlDecoder.fromPercentEncoding( metadata.firstChildElement( "origin-template" ).text().toUtf8() );
     source.Type = urlDecoder.fromPercentEncoding( metadata.firstChildElement( "origin-type" ).text().toUtf8() );
     source.Source = urlDecoder.fromPercentEncoding( metadata.firstChildElement( "origin-source" ).text().toUtf8() );
+    source.Uuid = urlDecoder.fromPercentEncoding( metadata.firstChildElement( "origin-uuid" ).text().toUtf8() );
 
     return source;
 }

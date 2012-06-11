@@ -1,4 +1,4 @@
-#ifndef DOCUMENTIMPORTER_H
+﻿#ifndef DOCUMENTIMPORTER_H
 #define DOCUMENTIMPORTER_H
 
 #include <QFile>
@@ -12,6 +12,13 @@
 
 class DocumentImporter
 {
+public:
+    enum ImportType
+    {
+        IT_FILE,
+        IT_CLIPBOARD
+    };
+
 private:
     QString m_File;
     OriginalSource m_Source;
@@ -20,7 +27,10 @@ private:
     bool parsePng();
     bool parseSvg();
 
+    ImportType m_ImportType;
+
 public:
+    DocumentImporter();
     DocumentImporter( const QString &fileName );
 
     bool isValid() const;
@@ -28,6 +38,8 @@ public:
 
     DocumentType type() const;
     const OriginalSource & source() const;
+
+    const QString & fileName() const;
 };
 
 #endif // DOCUMENTIMPORTER_H

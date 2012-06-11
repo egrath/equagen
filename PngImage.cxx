@@ -16,6 +16,7 @@ void PngImage::setOriginalSource( const OriginalSource &source )
     image.setText( "origin-type", QString( urlEncoder.toPercentEncoding( source.Type )));
     image.setText( "origin-template", QString( urlEncoder.toPercentEncoding( source.Template )));
     image.setText( "origin-source", QString( urlEncoder.toPercentEncoding( source.Source )));
+    image.setText( "origin-uuid", QString( urlEncoder.toPercentEncoding( source.Uuid )));
 
     // Save modified image back to Byte array
     delete m_RawContent;
@@ -34,6 +35,7 @@ const OriginalSource PngImage::originalSource() const
     source.Type = image.text( "origin-type" );
     source.Template = image.text( "origin-template" );
     source.Source = image.text( "origin-source" );
+    source.Uuid = image.text( "origin-uuid" );
 
     return source;
 }

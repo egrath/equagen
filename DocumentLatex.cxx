@@ -1,4 +1,4 @@
-#include "DocumentLatex.h"
+﻿#include "DocumentLatex.h"
 
 DocumentLatex::DocumentLatex(const QString &name, const QString &initial) : Document( name, initial )
 {
@@ -41,6 +41,7 @@ bool DocumentLatex::compile()
     source.Type = "latex";
     source.Template = m_TexTemplate;
     source.Source = plainContent();
+    source.Uuid = uuid().toString();
 
     // Create temporary directory for tex commands output
     emit compilationStep( "Building representation", 10 );

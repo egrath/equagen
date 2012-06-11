@@ -35,7 +35,9 @@ private:
 
     void setupUserInterface();
     void setupToolbar();
+    void switchToDocument( const QUuid &uuid );
     DocumentEditor * addDocumentTab( DocumentType type, const QString &name );
+    DocumentEditor * getDocumentTabForUuid( const QUuid &uuid );
     void addAdderTab();
 
     QString generateEmptyTabName();
@@ -44,7 +46,7 @@ private:
     void setStatusMessage( bool enabled, const QString &message = "", const QColor & color = QColor( 0, 0, 0 ));
 
     bool exportCurrentDocument( ImageType type );
-    bool importDocument();
+    bool importDocument( DocumentImporter::ImportType type );
 
 private slots:
     void buttonCompilePressed( bool checked );
@@ -59,6 +61,7 @@ private slots:
     void menuFileExportSvgPressed( bool checked );
     void menuFileExportPngPressed( bool checked );
     void menuFileImportPressed( bool checked );
+    void menuEditPastePressed( bool checked );
     void menuEditOptionsPressed( bool checked );
 
     void menuViewZoomInPressed( bool checked );

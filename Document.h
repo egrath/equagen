@@ -1,4 +1,4 @@
-#ifndef DOCUMENT_H
+﻿#ifndef DOCUMENT_H
 #define DOCUMENT_H
 
 #include <Qt>
@@ -71,6 +71,7 @@ public:
     const PngImage & pngImage() const;
 
     // Get UUID of document
+    void setUuid( const QUuid &uuid );
     const QUuid & uuid() const;
 
     // Is the current document valid? (i.e. have the PNG/SVN's generated)

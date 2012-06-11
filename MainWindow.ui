@@ -110,7 +110,7 @@
      <x>0</x>
      <y>0</y>
      <width>773</width>
-     <height>24</height>
+     <height>21</height>
     </rect>
    </property>
    <widget class="QMenu" name="menu_File">
@@ -132,6 +132,8 @@
     <property name="title">
      <string>&amp;Edit</string>
     </property>
+    <addaction name="actionEditCopy"/>
+    <addaction name="actionEditPaste"/>
     <addaction name="actionEditOptions"/>
    </widget>
    <widget class="QMenu" name="menu_View">
@@ -281,7 +283,7 @@
   </action>
   <action name="actionHelpAbout">
    <property name="icon">
-    <iconset resource="equagen.qrc">
+    <iconset>
      <normaloff>:/icons/about.svg</normaloff>:/icons/about.svg</iconset>
    </property>
    <property name="text">
@@ -289,6 +291,30 @@
    </property>
    <property name="iconVisibleInMenu">
     <bool>true</bool>
+   </property>
+  </action>
+  <action name="actionEditCopy">
+   <property name="icon">
+    <iconset resource="equagen.qrc">
+     <normaloff>:/icons/edit-copy.svg</normaloff>:/icons/edit-copy.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Copy</string>
+   </property>
+   <property name="toolTip">
+    <string>Copy to Clipboard</string>
+   </property>
+  </action>
+  <action name="actionEditPaste">
+   <property name="icon">
+    <iconset resource="equagen.qrc">
+     <normaloff>:/icons/edit-paste.svg</normaloff>:/icons/edit-paste.svg</iconset>
+   </property>
+   <property name="text">
+    <string>Paste</string>
+   </property>
+   <property name="toolTip">
+    <string>Paste from Clipboard</string>
    </property>
   </action>
  </widget>

@@ -30,10 +30,15 @@ void SvgImage::setOriginalSource(const OriginalSource &source)
     originSource.setAttribute( "id", "origin-source" );
     originSource.appendChild( document.createTextNode( QString( urlEncoder.toPercentEncoding( source.Source ))));
 
+    QDomElement originUuid = document.createElement( "origin-uuid" );
+    originUuid.setAttribute( "id", "origin-uuid" );
+    originUuid.appendChild( document.createTextNode( QString( urlEncoder.toPercentEncoding( source.Uuid ))));
+
     // Append Nodes to Description Element
     description.appendChild( originType );
     description.appendChild( originTemplate );
     description.appendChild( originSource );
+    description.appendChild( originUuid );
 
     // Append the complete Description Node to the group Element
     QDomNode group = document.elementsByTagName( "g" ).at( 0 );

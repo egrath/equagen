@@ -16,8 +16,10 @@ void MainWindow::setupUserInterface()
     QObject::connect( m_UserInterface->tabWidget, SIGNAL(currentChanged(int)),this,SLOT(tabWidgetIndexChanged(int)));
     QObject::connect( m_UserInterface->tabWidget, SIGNAL(tabCloseRequested(int)), this, SLOT(tabCloseRequested(int)));
 
-    // Connect Edit->Options dialog
+    // Connect Edit menu
     QObject::connect( m_UserInterface->actionEditOptions, SIGNAL( triggered( bool )), this, SLOT( menuEditOptionsPressed(bool)));
+    QObject::connect( m_UserInterface->actionEditCopy, SIGNAL(triggered(bool)), this, SLOT( buttonCopyClipboardPressed(bool)));
+    QObject::connect( m_UserInterface->actionEditPaste, SIGNAL(triggered(bool)), this, SLOT(menuEditPastePressed(bool)));
 
     // Connect File Menu
     QObject::connect( m_UserInterface->actionFileQuit, SIGNAL( triggered( bool )), this, SLOT( menuFileQuitPressed(bool)));
@@ -32,6 +34,13 @@ void MainWindow::setupUserInterface()
 
     // Connect About menu
     QObject::connect( m_UserInterface->actionHelpAbout, SIGNAL( triggered( bool )), this, SLOT( menuHelpAboutPressed(bool)));
+
+    // Set shortcut context
+    m_UserInterface->actionEditCopy->setShortcut( QKeySequence::Copy );
+    m_UserInterface->actionEditCopy->setShortcutContext( Qt::ApplicationShortcut );
+
+    m_UserInterface->actionEditPaste->setShortcut( QKeySequence::Paste );
+    m_UserInterface->actionEditPaste->setShortcutContext( Qt::ApplicationShortcut );
 
     // Build the Toolbar
     setupToolbar();
@@ -63,6 +72,39 @@ void MainWindow::setupToolbar()
 
     // Connect
     QObject::connect( m_CopySelectorComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(toolbarCopyModeSelectorIndexChanged(QString)));
+}
+
+void MainWindow::switchToDocument( const QUuid &uuid )
+{
+    QTabWidget *tw = m_UserInterface->tabWidget;
+
+    DocumentEditor *editor;
+    for( int index = 0; index < tw->count(); index ++ )
+    {
+        editor = ( DocumentEditor * ) tw->widget( index );
+        if( editor->uuid() == uuid )
+        {
+            qDebug() << "We already have the document with UUID open, switching to it.";
+            tw->setCurrentIndex( index );
+            break;
+        }
+    }
+}
+
+// Return the DocumentEditor for the given UUID if it's open
+DocumentEditor * MainWindow::getDocumentTabForUuid( const QUuid &uuid )
+{
+    QTabWidget *tw = m_UserInterface->tabWidget;
+
+    DocumentEditor *editor;
+    for( int index = 0; index < tw->count(); index ++ )
+    {
+        editor = ( DocumentEditor * ) tw->widget( index );
+        if( editor->uuid() == uuid )
+            return editor;
+    }
+
+    return 0;
 }
 
 // Insert a new Document Editor Tab
@@ -157,43 +199,67 @@ bool MainWindow::exportCurrentDocument( ImageType type )
     return false;
 }
 
-bool MainWindow::importDocument()
+bool MainWindow::importDocument( DocumentImporter::ImportType type )
 {
-    static QString previousFolder = QDir( QDir::currentPath() ).dirName();
-    QFileDialog openDialog( this );
-    openDialog.setDirectory( previousFolder );
-    openDialog.setAcceptMode( QFileDialog::AcceptOpen );
-    openDialog.setWindowTitle( "Import document" );
-    openDialog.setNameFilter( "Supported files (*.png *.svg)" );
-
-    if( openDialog.exec() == QFileDialog::Accepted )
+    DocumentImporter *importer = 0;
+    if( type == DocumentImporter::IT_FILE )
     {
-        QString fileName = openDialog.selectedFiles().at( 0 );
-        DocumentImporter importer( fileName );
-        if( ! importer.parse() )
-        {
-            QMessageBox mb( QMessageBox::Critical, "Failed to import", "The specified file has not been produced by us", QMessageBox::Ok, this );
-            mb.exec();
+        static QString previousFolder = QDir( QDir::currentPath() ).dirName();
+        QFileDialog openDialog( this );
+        openDialog.setDirectory( previousFolder );
+        openDialog.setAcceptMode( QFileDialog::AcceptOpen );
+        openDialog.setWindowTitle( "Import document" );
+        openDialog.setNameFilter( "Supported files (*.png *.svg)" );
 
+        if( openDialog.exec() == QFileDialog::Accepted )
+        {
+            QString fileName = openDialog.selectedFiles().at( 0 );
+            importer = new DocumentImporter( fileName );
+        }
+        else
+        {
             return false;
         }
+    }
+    else
+        importer = new DocumentImporter();
 
-        // Create a new tab with the file content if the current document has been modified and is
-        // not compilable
-        DocumentEditor *editor = addDocumentTab( importer.type(), QFileInfo( fileName ).fileName() );
-        editor->setDocumentFromSource( importer.source() );
+    if( ! importer->parse() )
+    {
+        QMessageBox mb( QMessageBox::Critical, "Failed to import", "The specified file has not been produced by us", QMessageBox::Ok, this );
+        mb.exec();
 
-        qDebug() << "Imported-Template: " << importer.source().Template;
-        qDebug() << "Imported-Source  : " << importer.source().Source;
-        qDebug() << "Imported-Type    : " << importer.source().Type;
-
-        // Compile the document
-        buttonCompilePressed( false );
-
-        return true;
+        return false;
     }
 
-    return false;
+    // Check if we already have the document open (based on it's uuid)
+    QUuid uuid( importer->source().Uuid );
+    DocumentEditor *editor = getDocumentTabForUuid( uuid );
+    if( editor == 0 )
+    {
+        switch( type )
+        {
+        case DocumentImporter::IT_FILE:
+            editor = addDocumentTab( importer->type(), QFileInfo( importer->fileName() ).fileName() );
+            break;
+        case DocumentImporter::IT_CLIPBOARD:
+            editor = addDocumentTab( importer->type(), importer->fileName() );
+            break;
+        }
+    }
+    else
+        switchToDocument( editor->uuid() );
+    editor->setDocumentFromSource( importer->source() );
+
+    qDebug() << "Imported-Template: " << importer->source().Template;
+    qDebug() << "Imported-Source  : " << importer->source().Source;
+    qDebug() << "Imported-Type    : " << importer->source().Type;
+    qDebug() << "Imported-UUID    : " << importer->source().Uuid;
+
+    // Compile the document
+    buttonCompilePressed( false );
+
+    return true;
 }
 
 // PRIVATE SLOTS
@@ -311,8 +377,15 @@ void MainWindow::menuFileExportPngPressed( bool checked )
 
 void MainWindow::menuFileImportPressed( bool checked )
 {
-    qDebug() << "MainWindow: Import document";
-    importDocument();
+    qDebug() << "MainWindow: Import document from file ";
+    importDocument( DocumentImporter::IT_FILE );
+}
+
+void MainWindow::menuEditPastePressed( bool checked )
+{
+    // Pasting document from clipboard if supported
+    qDebug() << "MainWindow: Import document from clipboard";
+    importDocument( DocumentImporter::IT_CLIPBOARD );
 }
 
 void MainWindow::menuEditOptionsPressed( bool checked )

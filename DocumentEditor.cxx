@@ -314,6 +314,9 @@ bool DocumentEditor::setDocumentFromSource( const OriginalSource & source )
         (( DocumentLatex * ) m_Document )->setTexTemplate( source.Template );
     }
 
+    // Set UUID
+    m_Document->setUuid( QUuid( source.Uuid ));
+
     return true;
 }
 

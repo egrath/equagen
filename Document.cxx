@@ -1,4 +1,4 @@
-#include "Document.h"
+﻿#include "Document.h"
 
 // PROTECTED
 void Document::setLastCompileError( const QString &error )
@@ -79,6 +79,12 @@ const PngImage & Document::pngImage() const
 const SvgImage & Document::svgImage() const
 {
     return *m_Svg;
+}
+
+void Document::setUuid( const QUuid &uuid )
+{
+    m_Uuid = uuid;
+    qDebug() << "Document with Name [" << m_Name << "] changed it's UUID to: " << m_Uuid;
 }
 
 const QUuid & Document::uuid() const

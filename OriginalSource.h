@@ -1,4 +1,4 @@
-#ifndef ORIGINALSOURCE_H
+﻿#ifndef ORIGINALSOURCE_H
 #define ORIGINALSOURCE_H
 
 #include <QString>
@@ -9,5 +9,6 @@ public:
     QString Type;
     QString Template;
     QString Source;
+    QString Uuid;
 };
 #endif // ORIGINALSOURCE_H
