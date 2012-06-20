@@ -1,4 +1,4 @@
-#include "Renderer.h"
+﻿#include "Renderer.h"
 
 void Renderer::init()
 {
@@ -6,6 +6,8 @@ void Renderer::init()
 
     // Set configured preview scale
     setScale( m_Settings->previewScale() );
+
+    setMouseTracking( true );
 }
 
 Renderer::Renderer()
@@ -57,6 +59,17 @@ const qreal & Renderer::scale() const
     return m_Scale;
 }
 
+QSize Renderer::renderedSize() const
+{
+    QSize size;
+
+    size.setWidth( m_Renderer.viewBox().width() * m_Scale );
+    size.setHeight( m_Renderer.viewBox().height() * m_Scale );
+
+    return size;
+}
+
+// PROTECTED
 void Renderer::paintEvent( QPaintEvent *event )
 {
     event->accept();
@@ -77,4 +90,16 @@ void Renderer::resizeEvent( QResizeEvent *event )
 {
     qDebug() << "Renderer: got resize to: " << event->size() << " (excluding scale of " << m_Scale << ")";
     QWidget::resizeEvent( event );
+}
+
+void Renderer::mouseMoveEvent( QMouseEvent *event )
+{
+}
+
+void Renderer::mousePressEvent( QMouseEvent *event )
+{
+}
+
+void Renderer::mouseReleaseEvent( QMouseEvent *event )
+{
 }

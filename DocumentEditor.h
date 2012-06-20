@@ -1,4 +1,4 @@
-#ifndef DOCUMENTEDITOR_H
+﻿#ifndef DOCUMENTEDITOR_H
 #define DOCUMENTEDITOR_H
 
 #include <QWheelEvent>
@@ -25,17 +25,19 @@ private:
     bool m_IsModified;
     bool m_CanCompile;
     bool m_HasError;
+    bool m_PreviewAutoscroll;
 
     ClipboardCopyType m_ClipboardCopyType;
 
     void setupUserInterface();
     void setupSplitterPane();
 
-    QImage preparePngImageForClipboard() const;   
+    QImage preparePngImageForClipboard() const;
 
 private slots:
     void textEditorTextChanged();
     void previewScrollerMouseWheelEvent( QWheelEvent *event );
+    void previewScrollerVerticalBarMoved( int value );
     void splitterPaneHandleMoved( int pos, int index );
 
     void configurationSettingsChanged();
@@ -87,7 +89,7 @@ public:
     // Zoom operations
     qreal zoomIn();
     qreal zoomOut();
-    qreal zoomNormal();    
+    qreal zoomNormal();
 
 signals:
     void documentStatusChanged();

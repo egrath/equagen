@@ -13,6 +13,9 @@ void DocumentEditor::setupUserInterface()
 
     // Splitter drag handle
     QObject::connect( m_UserInterface->splitterPane, SIGNAL(splitterMoved(int,int)), this, SLOT(splitterPaneHandleMoved(int,int)));
+
+    // Vertical preview slider change
+    QObject::connect( m_UserInterface->scrollArea->verticalScrollBar(), SIGNAL(sliderMoved(int)), this, SLOT(previewScrollerVerticalBarMoved(int)));
 }
 
 // Makes the splitter pane's children equally sized
@@ -79,6 +82,19 @@ void DocumentEditor::previewScrollerMouseWheelEvent( QWheelEvent *event )
         zoomIn();
     else
         zoomOut();
+}
+
+// Event handler for Vertical Preview scrollbar change
+void DocumentEditor::previewScrollerVerticalBarMoved(int value )
+{
+    int maxValue = m_PreviewScrollArea->verticalScrollBar()->maximum();
+
+    if( value < maxValue )
+        m_PreviewAutoscroll = false;
+    else
+        m_PreviewAutoscroll = true;
+
+    qDebug() << "DocumentEditor::previewScrollerVerticalBarMoved: Autoscroll = " << m_PreviewAutoscroll;
 }
 
 // Event handler for SettingsProvider, called when the settings have changed
@@ -176,6 +192,7 @@ DocumentEditor::DocumentEditor( DocumentType type, const QString &name, const QS
     m_IsModified = false;
     m_CanCompile = false;
     m_HasError = false;
+    m_PreviewAutoscroll = true;
 
     // Get settings provider
     m_Settings = SettingsProvider::instance();
@@ -227,6 +244,12 @@ bool DocumentEditor::compile()
 
     m_Renderer->setImage( m_Document->svgImage() );
     m_Renderer->repaint();
+
+    // Check if the Image is larger than the scroll area and scroll to the end
+    if(( m_Renderer->renderedSize().height() + 30 ) > m_PreviewScrollArea->height() && m_PreviewAutoscroll )
+    {
+        m_PreviewScrollArea->ensureVisible( 0, m_Renderer->renderedSize().height());
+    }
 
     // Everything went as expected
     m_HasError = false;
