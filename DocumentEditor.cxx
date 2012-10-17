@@ -162,6 +162,12 @@ void DocumentEditor::copyImageToClipboard() const
         clip->setImage( clipboardImage );
         break;
 
+    case CCT_CODE:
+        qDebug() << "Copying plain code to clipboard ...";
+
+        clip->setText( m_Document->plainContent() );
+        break;
+
     default:
         break;
     }

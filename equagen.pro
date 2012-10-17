@@ -6,7 +6,7 @@ unix {
 win32 {
     OBJECTS_DIR = build.tmp/win32
     DESTDIR = build/win32
-    CONFIG += console
+    CONFIG -= console
 }
 
 QT += svg xml

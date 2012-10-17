@@ -1,9 +1,12 @@
 ﻿#include "MainWindow.h"
 
 void MainWindow::setupUserInterface()
-{
+{    
     m_UserInterface = new Ui_MainWindow();
     m_UserInterface->setupUi( this );
+
+    // Set the Window icon
+    setWindowIcon( QIcon( QPixmap::fromImage( QImage( ":/icons/applogo.png" ))));
 
     // Create Label for Status messages
     m_StatusLabel = new QLabel( "", m_UserInterface->statusbar );
@@ -65,6 +68,7 @@ void MainWindow::setupToolbar()
     m_CopySelectorComboBox = new QComboBox();
     m_CopySelectorComboBox->addItem( "PNG" );
     m_CopySelectorComboBox->addItem( "SVG" );
+    m_CopySelectorComboBox->addItem( "Code" );
     m_CopySelectorComboBox->setCurrentIndex( 1 );
     m_UserInterface->toolBar->addSeparator();
     m_UserInterface->toolBar->addWidget( copySelectorLabel );
@@ -448,6 +452,8 @@ void MainWindow::toolbarCopyModeSelectorIndexChanged( const QString &copyMode )
         newMode = CCT_SVG;
     else if( copyMode == "PNG" )
         newMode = CCT_PNG;
+    else if( copyMode == "Code" )
+        newMode = CCT_CODE;
     else
         newMode = CCT_PNG;
 

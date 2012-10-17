@@ -6,7 +6,8 @@
 enum ClipboardCopyType
 {
     CCT_PNG,
-    CCT_SVG
+    CCT_SVG,
+    CCT_CODE
 };
 
 class ClipboardManager
