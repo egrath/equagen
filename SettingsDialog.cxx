@@ -15,6 +15,7 @@ void SettingsDialog::setupUserInterface()
     QObject::connect( m_UserInterface->buttonCancel,SIGNAL(clicked()),this,SLOT(buttonCancelPressed()));
     QObject::connect( m_UserInterface->buttonTextColor, SIGNAL( clicked() ),this,SLOT(buttonTextColorPressed()));
     QObject::connect( m_UserInterface->buttonBackgroundColor, SIGNAL(clicked()),this,SLOT(buttonBackgroundColorPressed()));
+    QObject::connect( m_UserInterface->buttonTemplateNew, SIGNAL(clicked()), this, SLOT(buttonTemplateNewPressed()));
 }
 
 void SettingsDialog::setupFontTab()
@@ -54,6 +55,27 @@ void SettingsDialog::setupFontTab()
 
         fontSizesIterator++;
     }
+}
+
+void SettingsDialog::buttonTemplateNewPressed()
+{
+    qDebug() << "Showing Template Editor with empty template";
+
+    TemplateEditor *templateEditor = new TemplateEditor();
+    int rc = templateEditor->exec();
+    if( rc == QDialog::Accepted )
+    {
+    }
+
+    delete templateEditor;
+}
+
+void SettingsDialog::buttonTemplateEditPressed()
+{
+}
+
+void SettingsDialog::buttonTemplateRemovePressed()
+{
 }
 
 void SettingsDialog::buttonBrowseLatexPressed()

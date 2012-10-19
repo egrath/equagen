@@ -7,6 +7,8 @@
 #include <QFontDatabase>
 
 #include "SettingsProvider.h"
+#include "TemplateEditor.h"
+#include "Template.h"
 #include "ui_SettingsDialog.h"
 
 class SettingsDialog : public QDialog
@@ -21,6 +23,10 @@ private:
     void setupFontTab();
 
 private slots:
+    void buttonTemplateNewPressed();
+    void buttonTemplateEditPressed();
+    void buttonTemplateRemovePressed();
+
     void buttonBrowseLatexPressed();
     void buttonBrowseDvisvgmPressed();
 
@@ -28,7 +34,7 @@ private slots:
     void buttonBackgroundColorPressed();
 
     void buttonSavePressed();
-    void buttonCancelPressed();
+    void buttonCancelPressed();    
 
     QString showFileOpenDialog( const QString &directory );
 

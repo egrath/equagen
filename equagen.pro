@@ -1,12 +1,29 @@
 unix {
     OBJECTS_DIR = build.tmp/linux
-    DESTDIR = build/linux
+    MOC_DIR = build.tmp/linux
+
+    debug {
+        DESTDIR = build/linux/debug
+    }
+
+    release {
+        DESTDIR = build/linux/release
+    }
 }
 
 win32 {
     OBJECTS_DIR = build.tmp/win32
-    DESTDIR = build/win32
-    CONFIG -= console
+    MOC_DIR = build.tmp/win32
+    debug {
+        DESTDIR = build/win32/debug
+        CONFIG += console
+    }
+    release {
+        DESTDIR = build/win32/release
+        CONFIG -= console
+    }
+
+    CONFIG += console
 }
 
 QT += svg xml
@@ -31,7 +48,9 @@ SOURCES += \
     ProgressIndicator.cxx \
     DocumentCompiler.cxx \
     DocumentImporter.cxx \
-    AboutDialog.cxx
+    AboutDialog.cxx \
+    TemplateEditor.cxx \
+    Template.cxx
 
 HEADERS += \
     Document.h \
@@ -54,7 +73,9 @@ HEADERS += \
     DocumentCompiler.h \
     OriginalSource.h \
     DocumentImporter.h \
-    AboutDialog.h
+    AboutDialog.h \
+    TemplateEditor.h \
+    Template.h
 
 FORMS += \
     MainWindow.ui \
@@ -62,7 +83,8 @@ FORMS += \
     ErrorLog.ui \
     SettingsDialog.ui \
     ProgressIndicator.ui \
-    AboutDialog.ui
+    AboutDialog.ui \
+    TemplateEditor.ui
 
 RESOURCES += \
     equagen.qrc

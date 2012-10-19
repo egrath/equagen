@@ -20,7 +20,7 @@
    <item>
     <widget class="QTabWidget" name="tabWidget">
      <property name="currentIndex">
-      <number>1</number>
+      <number>2</number>
      </property>
      <widget class="QWidget" name="tabGeneral_2">
       <attribute name="title">
@@ -229,21 +229,21 @@
          <item>
           <layout class="QVBoxLayout" name="verticalLayout_2">
            <item>
-            <widget class="QPushButton" name="pushButtonNewTemplate">
+            <widget class="QPushButton" name="buttonTemplateNew">
              <property name="text">
               <string>New</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButtonEditTemplate">
+            <widget class="QPushButton" name="buttonTemplateEdit">
              <property name="text">
               <string>Edit</string>
              </property>
             </widget>
            </item>
            <item>
-            <widget class="QPushButton" name="pushButtonDeleteTemplate">
+            <widget class="QPushButton" name="buttonTemplateDelete">
              <property name="text">
               <string>Delete</string>
              </property>
