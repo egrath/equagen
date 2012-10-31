@@ -349,6 +349,20 @@ bool DocumentEditor::setDocumentFromSource( const OriginalSource & source )
     return true;
 }
 
+void DocumentEditor::setDocumentLatexTemplate( Template t )
+{
+    m_TexTemplateInUse = t;
+    if( m_Document->documentType() == DT_LATEX )
+    {
+        (( DocumentLatex * ) m_Document )->setTexTemplate( m_TexTemplateInUse.code() );
+    }
+}
+
+Template & DocumentEditor::documentLatexTemplate()
+{
+    return m_TexTemplateInUse;
+}
+
 bool DocumentEditor::exportDocumentToFile( ImageType type, const QString &fileName )
 {
     QFile exportFile( fileName );

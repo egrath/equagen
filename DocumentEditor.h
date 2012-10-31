@@ -7,6 +7,7 @@
 #include "SettingsProvider.h"
 #include "DocumentFactory.h"
 #include "DocumentCompiler.h"
+#include "Template.h"
 
 #include "ui_DocumentEditor.h"
 
@@ -20,6 +21,7 @@ private:
     Renderer *m_Renderer;
     Document *m_Document;
     SettingsProvider *m_Settings;
+    Template m_TexTemplateInUse;
     int m_TextEditorWidth;
 
     bool m_IsModified;
@@ -79,6 +81,10 @@ public:
 
     // Import document from file
     bool setDocumentFromSource( const OriginalSource &source );
+
+    // Set the Latex Template
+    void setDocumentLatexTemplate( Template t );
+    Template & documentLatexTemplate();
 
     // Type of underlaying Document
     const DocumentType & documentType() const;

@@ -15,6 +15,7 @@ DocumentLatex::~DocumentLatex()
 
 void DocumentLatex::setTexTemplate( const QString &templ )
 {
+    qDebug() << "DocumentLatex: Setting new LaTeX template";
     m_TexTemplate = templ;
 }
 

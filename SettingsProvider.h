@@ -4,6 +4,9 @@
 #include <QDebug>
 #include <QSettings>
 #include <QFont>
+#include <QRegExp>
+
+#include "Template.h"
 
 class SettingsProvider : public QObject
 {
@@ -38,6 +41,12 @@ public:
     void setWindowState( const QByteArray &state );
     QByteArray windowGeometry() const;
     QByteArray windowState() const;
+
+    // Templates
+    void addLatexTemplate( const Template &templ );
+    void delLatexTemplate( const Template &templ );
+    QList<Template *> * getLatexTemplates();
+    Template getLatexTemplate( const QString &name );
 
     bool valid() const; // True if the settings are valid
     void setDirty();    // Call if our settings have been modified

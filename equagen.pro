@@ -23,7 +23,7 @@ win32 {
         CONFIG -= console
     }
 
-    CONFIG += console
+    CONFIG -= console
 }
 
 QT += svg xml

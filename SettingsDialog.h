@@ -22,6 +22,8 @@ private:
     void setupUserInterface();
     void setupFontTab();
 
+    void refreshTemplateList();
+
 private slots:
     void buttonTemplateNewPressed();
     void buttonTemplateEditPressed();
@@ -35,6 +37,8 @@ private slots:
 
     void buttonSavePressed();
     void buttonCancelPressed();    
+
+    void templateListSelectionChanged();
 
     QString showFileOpenDialog( const QString &directory );
 

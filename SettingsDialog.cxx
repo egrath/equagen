@@ -8,6 +8,9 @@ void SettingsDialog::setupUserInterface()
     // Set up font tab
     setupFontTab();
 
+    // Refresh the list of installed templates
+    refreshTemplateList();
+
     // Connect signals
     QObject::connect( m_UserInterface->buttonBrowseLatex, SIGNAL(clicked()), this, SLOT(buttonBrowseLatexPressed()));
     QObject::connect( m_UserInterface->buttonBrowseDvisvgm, SIGNAL(clicked()),this,SLOT(buttonBrowseDvisvgmPressed()));
@@ -16,6 +19,9 @@ void SettingsDialog::setupUserInterface()
     QObject::connect( m_UserInterface->buttonTextColor, SIGNAL( clicked() ),this,SLOT(buttonTextColorPressed()));
     QObject::connect( m_UserInterface->buttonBackgroundColor, SIGNAL(clicked()),this,SLOT(buttonBackgroundColorPressed()));
     QObject::connect( m_UserInterface->buttonTemplateNew, SIGNAL(clicked()), this, SLOT(buttonTemplateNewPressed()));
+    QObject::connect( m_UserInterface->buttonTemplateEdit, SIGNAL(clicked()), this, SLOT(buttonTemplateEditPressed()));
+    QObject::connect( m_UserInterface->buttonTemplateDelete,SIGNAL(clicked()), this,SLOT(buttonTemplateRemovePressed()));
+    QObject::connect( m_UserInterface->templateList,SIGNAL(itemSelectionChanged()),this,SLOT(templateListSelectionChanged()));
 }
 
 void SettingsDialog::setupFontTab()
@@ -57,14 +63,39 @@ void SettingsDialog::setupFontTab()
     }
 }
 
+void SettingsDialog::refreshTemplateList()
+{
+    QListWidget *templateList = m_UserInterface->templateList;
+    templateList->clear();
+
+    QList<Template *> *templates = m_Settings->getLatexTemplates();
+    QList<Template *>::iterator iter = templates->begin();
+
+    while( iter != templates->end() )
+    {
+        qDebug() << "SettingsDialog: Adding Template to list:" << (*iter)->text();
+        templateList->addItem( (*iter));
+        iter++;
+    }
+
+    delete templates;
+}
+
 void SettingsDialog::buttonTemplateNewPressed()
 {
     qDebug() << "Showing Template Editor with empty template";
 
     TemplateEditor *templateEditor = new TemplateEditor();
+
     int rc = templateEditor->exec();
     if( rc == QDialog::Accepted )
     {
+        Template *t = new Template(
+                    templateEditor->templateName(),
+                    templateEditor->templateCode());
+
+        m_Settings->addLatexTemplate( *t );
+        refreshTemplateList();
     }
 
     delete templateEditor;
@@ -72,10 +103,36 @@ void SettingsDialog::buttonTemplateNewPressed()
 
 void SettingsDialog::buttonTemplateEditPressed()
 {
+    qDebug() << "Editing template";
+
+    QListWidget *templateList = m_UserInterface->templateList;
+    Template *t = ( Template * ) templateList->selectedItems().at(0);
+
+    TemplateEditor *templateEditor = new TemplateEditor();
+    templateEditor->setTemplateName( t->name() );
+    templateEditor->setTemplateCode( t->code() );
+
+    int rc = templateEditor->exec();
+    if( rc == QDialog::Accepted )
+    {
+        t->setName( templateEditor->templateName() );
+        t->setCode( templateEditor->templateCode() );
+
+        // This will also perform the update
+        m_Settings->addLatexTemplate( *t );
+        refreshTemplateList();
+    }
+
+    delete templateEditor;
 }
 
 void SettingsDialog::buttonTemplateRemovePressed()
 {
+    Template *t = ( Template *) m_UserInterface->templateList->selectedItems().at( 0 );
+    qDebug() << "Removing template: " << t->name();
+
+    m_Settings->delLatexTemplate( *t );
+    refreshTemplateList();
 }
 
 void SettingsDialog::buttonBrowseLatexPressed()
@@ -131,6 +188,20 @@ void SettingsDialog::buttonCancelPressed()
 {
     qDebug() << "Cancel";
     close();
+}
+
+void SettingsDialog::templateListSelectionChanged()
+{
+    if( m_UserInterface->templateList->selectedItems().count() > 0 )
+    {
+        m_UserInterface->buttonTemplateDelete->setEnabled(true);
+        m_UserInterface->buttonTemplateEdit->setEnabled(true);
+    }
+    else
+    {
+        m_UserInterface->buttonTemplateDelete->setEnabled(false);
+        m_UserInterface->buttonTemplateEdit->setEnabled(false);
+    }
 }
 
 QString SettingsDialog::showFileOpenDialog( const QString &directory )

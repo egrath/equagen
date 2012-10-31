@@ -35,6 +35,7 @@ private:
 
     void setupUserInterface();
     void setupToolbar();
+    void setupTemplateList();
     void switchToDocument( const QUuid &uuid );
     DocumentEditor * addDocumentTab( DocumentType type, const QString &name );
     DocumentEditor * getDocumentTabForUuid( const QUuid &uuid );
@@ -44,6 +45,7 @@ private:
 
     void checkActiveDocumentStatus();
     void setStatusMessage( bool enabled, const QString &message = "", const QColor & color = QColor( 0, 0, 0 ));
+    void setTemplateSelection();
 
     bool exportCurrentDocument( ImageType type );
     bool importDocument( DocumentImporter::ImportType type );
@@ -74,6 +76,7 @@ private slots:
     void menuAddSketchDocumentPressed();
 
     void toolbarCopyModeSelectorIndexChanged( const QString &copyMode );
+    void toolbarTemplateSelectorIndexChanged( const QString &templateName );
 
     // For document compilation progress indicator
     void compilationStep( const QString &message, int step );

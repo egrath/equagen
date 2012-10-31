@@ -57,11 +57,11 @@ void MainWindow::setupToolbar()
     // Add Template selector
     QLabel *templateSelectorLabel = new QLabel( "Template" );
     m_TemplateSelectorComboBox = new QComboBox();
-    m_TemplateSelectorComboBox->addItem( "Built-in Template" );
-    m_TemplateSelectorComboBox->setCurrentIndex( 0 );
     m_UserInterface->toolBar->addSeparator();
     m_UserInterface->toolBar->addWidget( templateSelectorLabel );
     m_UserInterface->toolBar->addWidget( m_TemplateSelectorComboBox );
+    setupTemplateList();
+    QObject::connect( m_TemplateSelectorComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(toolbarTemplateSelectorIndexChanged(QString)));
 
     // Add PNG/SVG Copy Mode selector
     QLabel *copySelectorLabel = new QLabel( "Clipboard type" );
@@ -76,6 +76,33 @@ void MainWindow::setupToolbar()
 
     // Connect
     QObject::connect( m_CopySelectorComboBox, SIGNAL(currentIndexChanged(QString)), this, SLOT(toolbarCopyModeSelectorIndexChanged(QString)));
+}
+
+void MainWindow::setupTemplateList()
+{
+    // Add the default template
+    m_TemplateSelectorComboBox->clear();
+    m_TemplateSelectorComboBox->addItem( "Built-in Template" );
+    m_TemplateSelectorComboBox->setCurrentIndex( 0 );
+
+    // Add all other templates
+    QList<Template *> *templates = m_Settings->getLatexTemplates();
+    QList<Template *>::iterator iter = templates->begin();
+    while( iter != templates->end() )
+    {
+        Template *t = (*iter);
+        m_TemplateSelectorComboBox->addItem( t->name(), QVariant::fromValue(*t));
+        iter ++;
+    }
+
+    // Free Templates
+    iter = templates->begin();
+    while( iter != templates->end() )
+    {
+        delete (*iter);
+        iter++;
+    }
+    delete templates;
 }
 
 void MainWindow::switchToDocument( const QUuid &uuid )
@@ -353,6 +380,7 @@ void MainWindow::tabWidgetIndexChanged( int index )
     }
 
     m_ActiveDocument = ( DocumentEditor * ) m_UserInterface->tabWidget->currentWidget();
+    qDebug() << "Active Template for this editor: " << m_ActiveDocument->documentLatexTemplate().name();
 
     // Connect to the active document's change status signal
     QObject::connect( m_ActiveDocument, SIGNAL(documentStatusChanged()), this, SLOT(activeDocumentStatusChanged()));
@@ -360,6 +388,9 @@ void MainWindow::tabWidgetIndexChanged( int index )
     // Activate/Deactivate Copy/Error Log buttons according
     // to document status
     checkActiveDocumentStatus();
+
+    // Set the Template selector to the current selected one
+    setTemplateSelection();
 }
 
 void MainWindow::menuFileQuitPressed( bool checked )
@@ -396,6 +427,10 @@ void MainWindow::menuEditOptionsPressed( bool checked )
 {
     SettingsDialog dialog( this );
     dialog.exec();
+
+    // Reload templates in case they changed
+    setupTemplateList();
+    setTemplateSelection();
 
     if( m_Settings->valid() )
         setStatusMessage( false );
@@ -458,6 +493,29 @@ void MainWindow::toolbarCopyModeSelectorIndexChanged( const QString &copyMode )
         newMode = CCT_PNG;
 
     m_ActiveDocument->setClipboardCopyMode( newMode );
+}
+
+void MainWindow::toolbarTemplateSelectorIndexChanged(const QString &templateName)
+{
+    Template t = m_Settings->getLatexTemplate( templateName );
+    qDebug() << t.code();
+
+    m_ActiveDocument->setDocumentLatexTemplate( t );
+}
+
+void MainWindow::setTemplateSelection()
+{
+    Template t = m_ActiveDocument->documentLatexTemplate();
+
+    // Check if we have the template and set it
+    for( int i = 0; i < m_TemplateSelectorComboBox->count(); i ++ )
+    {
+        if( m_TemplateSelectorComboBox->itemText( i ).compare( t.name() ) == 0 )
+        {
+            m_TemplateSelectorComboBox->setCurrentIndex( i );
+            break;
+        }
+    }
 }
 
 // Check the currently active Document Editor for his status
@@ -565,6 +623,12 @@ void MainWindow::showEvent( QShowEvent *event )
 // PUBLIC
 MainWindow::MainWindow() : QMainWindow( 0 ), m_TabCounter(0)
 {
+    m_Settings = SettingsProvider::instance();
+    if( ! m_Settings->valid() )
+    {
+        setStatusMessage( true, "Configuration invalid!", QColor( 255, 0, 0));
+    }
+
     setupUserInterface();
     addDocumentTab( DT_LATEX, generateEmptyTabName() );
     addAdderTab();
@@ -575,11 +639,6 @@ MainWindow::MainWindow() : QMainWindow( 0 ), m_TabCounter(0)
     m_ErrorLog = new ErrorLog();
     m_ErrorLog->setWindowModality( Qt::ApplicationModal );
 
-    m_Settings = SettingsProvider::instance();
-    if( ! m_Settings->valid() )
-    {
-        setStatusMessage( true, "Configuration invalid!", QColor( 255, 0, 0));
-    }
 }
 
 MainWindow::~MainWindow()
