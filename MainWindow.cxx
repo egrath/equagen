@@ -624,10 +624,6 @@ void MainWindow::showEvent( QShowEvent *event )
 MainWindow::MainWindow() : QMainWindow( 0 ), m_TabCounter(0)
 {
     m_Settings = SettingsProvider::instance();
-    if( ! m_Settings->valid() )
-    {
-        setStatusMessage( true, "Configuration invalid!", QColor( 255, 0, 0));
-    }
 
     setupUserInterface();
     addDocumentTab( DT_LATEX, generateEmptyTabName() );
@@ -639,6 +635,11 @@ MainWindow::MainWindow() : QMainWindow( 0 ), m_TabCounter(0)
     m_ErrorLog = new ErrorLog();
     m_ErrorLog->setWindowModality( Qt::ApplicationModal );
 
+    // Are the settings valid?
+    if( ! m_Settings->valid() )
+    {
+        setStatusMessage( true, "Configuration invalid!", QColor( 255, 0, 0));
+    }
 }
 
 MainWindow::~MainWindow()
