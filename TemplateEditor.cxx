@@ -27,14 +27,20 @@ void TemplateEditor::buttonSaveAndExitPressed()
         msgBox.exec();
     } else
     {
-        Template t = m_Settings->getLatexTemplate( m_UserInterface->lineEditTemplateName->text() );
+        QString thisTemplateName = m_UserInterface->lineEditTemplateName->text();
+        Template t = m_Settings->getLatexTemplate( thisTemplateName );
         if( t.name().compare( "<UNINITIALIZED>" ) == 0 )
         {
             setResult( QDialog::Accepted );
             accept();
         }
-        else
+        else if( t.name().compare( thisTemplateName ) == 0 && m_EditExisting )
         {
+            setResult( QDialog::Accepted );
+            accept();
+        }
+        else
+        {            
             QMessageBox msgBox( QMessageBox::Critical, "Error", "Template name already exist, choose another one", QMessageBox::Ok, this );
             msgBox.exec();
         }
@@ -55,9 +61,10 @@ void TemplateEditor::buttonLoadDefaultPressed()
 }
 
 // PUBLIC
-TemplateEditor::TemplateEditor( QWidget *parent) : QDialog( parent )
+TemplateEditor::TemplateEditor( QWidget *parent, bool editExisting ) : QDialog( parent )
 {
     m_Settings = SettingsProvider::instance();
+    m_EditExisting = editExisting;
     setupUserInterface();
 }
 

@@ -108,7 +108,7 @@ void SettingsDialog::buttonTemplateEditPressed()
     QListWidget *templateList = m_UserInterface->templateList;
     Template *t = ( Template * ) templateList->selectedItems().at(0);
 
-    TemplateEditor *templateEditor = new TemplateEditor();
+    TemplateEditor *templateEditor = new TemplateEditor( 0, true );
     templateEditor->setTemplateName( t->name() );
     templateEditor->setTemplateCode( t->code() );
 

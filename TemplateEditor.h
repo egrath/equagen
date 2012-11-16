@@ -16,6 +16,7 @@ class TemplateEditor : public QDialog
 private:
     Ui_TemplateEditor *m_UserInterface;
     SettingsProvider *m_Settings;
+    bool m_EditExisting;
 
     void setupUserInterface();
 
@@ -25,7 +26,7 @@ private slots:
     void buttonLoadDefaultPressed();
 
 public:
-    TemplateEditor( QWidget *parent = 0 );
+    TemplateEditor( QWidget *parent = 0, bool editExisting = false );
     ~TemplateEditor();
 
     void setTemplateName( const QString &name );

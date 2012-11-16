@@ -26,6 +26,7 @@ win32 {
     CONFIG += console
 }
 
+CONFIG += exceptions
 QT += svg xml
 
 SOURCES += \
