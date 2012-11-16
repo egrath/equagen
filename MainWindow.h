@@ -9,6 +9,7 @@
 #include "SettingsDialog.h"
 #include "ProgressIndicator.h"
 #include "AboutDialog.h"
+#include "MathSyms.h"
 
 #include "ui_MainWindow.h"
 
@@ -24,6 +25,9 @@ private:
     QComboBox *m_TemplateSelectorComboBox;
 
     ProgressIndicator *m_ProgressIndicator;
+
+    // Mathematical Symbols Widget
+    MathSyms *m_MathSyms;
 
     // Document stuff
     DocumentEditor *m_ActiveDocument;

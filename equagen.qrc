@@ -20,5 +20,6 @@
     </qresource>
     <qresource prefix="/templates">
         <file alias="latex.template">templates/latex.template</file>
+        <file alias="mathsyms.txt">templates/mathsyms.txt</file>
     </qresource>
 </RCC>

@@ -1,0 +1,11 @@
+#
+# List of mathematical symbols
+#
+
+# category;friendly-name;icon;code
+Standard;Fraction;ms_frac.svg;\frac{a}{b}
+Standard;Exponent;ms_exponent.svg;{a}^{b}
+Standard;Square-Root;ms_squareroot.svg;\sqrt{a}
+Standard;Root;ms_root.svg;\sqrt[a]{b}
+Standard;Sum;ms_sum.svg;\sum_{a=1}^{\infty}a
+Standard;Product;ms_product.svg;\prod_{a=1}^{\infty}a

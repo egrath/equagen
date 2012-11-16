@@ -51,7 +51,8 @@ SOURCES += \
     DocumentImporter.cxx \
     AboutDialog.cxx \
     TemplateEditor.cxx \
-    Template.cxx
+    Template.cxx \
+    MathSyms.cxx
 
 HEADERS += \
     Document.h \
@@ -76,7 +77,8 @@ HEADERS += \
     DocumentImporter.h \
     AboutDialog.h \
     TemplateEditor.h \
-    Template.h
+    Template.h \
+    MathSyms.h
 
 FORMS += \
     MainWindow.ui \
@@ -91,4 +93,5 @@ RESOURCES += \
     equagen.qrc
 
 OTHER_FILES += \
-    templates/latex.template
+    templates/latex.template \
+    templates/mathsyms.txt

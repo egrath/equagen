@@ -640,9 +640,14 @@ MainWindow::MainWindow() : QMainWindow( 0 ), m_TabCounter(0)
     {
         setStatusMessage( true, "Configuration invalid!", QColor( 255, 0, 0));
     }
+
+    // FOR TESTING
+    //m_MathSyms = new MathSyms();
+    //m_MathSyms->show();
 }
 
 MainWindow::~MainWindow()
 {
+    //delete m_MathSyms;
     delete m_UserInterface;
 }
