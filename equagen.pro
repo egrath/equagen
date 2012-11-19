@@ -1,3 +1,5 @@
+## custom settings for output files depending on build configuration
+## and os target
 unix {
     OBJECTS_DIR = build.tmp/linux
     MOC_DIR = build.tmp/linux
@@ -26,6 +28,17 @@ win32 {
     CONFIG += console
 }
 
+## disable debug output if non debug build
+release {
+    DEFINES += QT_NO_DEBUG_OUTPUT
+    DEFINES += QT_NO_DEBUG
+}
+
+debug {
+    DEFINES -= QT_NO_DEBUG_OUTPUT
+    DEFINES -= QT_NO_DEBUG
+}
+
 CONFIG += exceptions
 QT += svg xml
 
@@ -52,7 +65,8 @@ SOURCES += \
     AboutDialog.cxx \
     TemplateEditor.cxx \
     Template.cxx \
-    MathSyms.cxx
+    MathSyms.cxx \
+    CommandLineParser.cxx
 
 HEADERS += \
     Document.h \
@@ -78,7 +92,8 @@ HEADERS += \
     AboutDialog.h \
     TemplateEditor.h \
     Template.h \
-    MathSyms.h
+    MathSyms.h \
+    CommandLineParser.h
 
 FORMS += \
     MainWindow.ui \
