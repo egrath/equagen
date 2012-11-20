@@ -5,7 +5,7 @@ DocumentFactory *DocumentFactory::m_Instance = 0;
 // PRIVATE METHODS
 DocumentFactory::DocumentFactory()
 {
-    qDebug() << "DocumentFactory::ctor()";
+    debug() << "DocumentFactory::ctor()";
 }
 
 DocumentFactory::~DocumentFactory()
@@ -28,7 +28,7 @@ Document * DocumentFactory::createDocument( DocumentType type )
     switch( type )
     {
     case DT_LATEX:
-        qDebug() << "DocumentFactory: Creating new LaTeX document";
+        debug() << "DocumentFactory: Creating new LaTeX document";
         return new DocumentLatex();
 
     default:

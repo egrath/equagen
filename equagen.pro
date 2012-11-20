@@ -28,17 +28,6 @@ win32 {
     CONFIG += console
 }
 
-## disable debug output if non debug build
-release {
-    DEFINES += QT_NO_DEBUG_OUTPUT
-    DEFINES += QT_NO_DEBUG
-}
-
-debug {
-    DEFINES -= QT_NO_DEBUG_OUTPUT
-    DEFINES -= QT_NO_DEBUG
-}
-
 CONFIG += exceptions
 QT += svg xml
 
@@ -66,7 +55,9 @@ SOURCES += \
     TemplateEditor.cxx \
     Template.cxx \
     MathSyms.cxx \
-    CommandLineParser.cxx
+    CommandLineParser.cxx \
+    CUIProcessor.cxx \
+    Debug.cxx
 
 HEADERS += \
     Document.h \
@@ -93,7 +84,9 @@ HEADERS += \
     TemplateEditor.h \
     Template.h \
     MathSyms.h \
-    CommandLineParser.h
+    CommandLineParser.h \
+    CUIProcessor.h \
+    Debug.h
 
 FORMS += \
     MainWindow.ui \

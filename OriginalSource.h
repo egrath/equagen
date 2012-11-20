@@ -3,6 +3,8 @@
 
 #include <QString>
 
+#include "Debug.h"
+
 struct OriginalSource
 {
 public:

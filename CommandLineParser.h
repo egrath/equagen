@@ -7,6 +7,8 @@
 
 #include <iostream>
 
+#include "Debug.h"
+
 using std::cout;
 using std::endl;
 
@@ -22,13 +24,14 @@ private:
     QVariant getDefaultValue( const QString &argument );
 
 public:
-    static CommandLineParser * getInstance();
+    static CommandLineParser * instance();
 
     CommandLineParser( int &argc, char **argv );
     ~CommandLineParser();
 
-    void parse();
+    bool parse();
     QVariant argument( const QString &key );
+    bool hasArgument( const QString &key );
     QString executableName();
 };
 

@@ -27,7 +27,7 @@ Template::Template( QString name, QString code, QUuid uuid ) : QListWidgetItem( 
     m_Code = code;
     m_Name = name;
 
-    qDebug() << QString( "Created new Template [%1] with name: [%2]" ).arg( m_Uuid.toString(), name );
+    debug() << QString( "Created new Template [%1] with name: [%2]" ).arg( m_Uuid.toString(), name );
 }
 
 Template::Template(QString name, QString code ) : QListWidgetItem( name, 0, QListWidgetItem::UserType )
@@ -36,7 +36,7 @@ Template::Template(QString name, QString code ) : QListWidgetItem( name, 0, QLis
     m_Code = code;
     m_Name = name;
 
-    qDebug() << QString( "Created new Template [%1] with name: [%2]" ).arg( m_Uuid.toString(), name );
+    debug() << QString( "Created new Template [%1] with name: [%2]" ).arg( m_Uuid.toString(), name );
 }
 
 Template::~Template()

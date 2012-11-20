@@ -7,7 +7,7 @@ SettingsProvider *SettingsProvider::m_Instance;
 SettingsProvider::SettingsProvider()
 {
     m_Settings = new QSettings( "egrath", "equagen" );
-    qDebug() << "Settings path: " << m_Settings->fileName();
+    debug() << "Settings path: " << m_Settings->fileName();
 }
 
 SettingsProvider::~SettingsProvider()
@@ -113,7 +113,7 @@ void SettingsProvider::delLatexTemplate(const Template &templ)
 
 QList<Template *> * SettingsProvider::getLatexTemplates()
 {
-    qDebug() << "SettingsProvider::getLatexTemplates()";
+    debug() << "SettingsProvider::getLatexTemplates()";
     QStringList keys = m_Settings->allKeys();
     QRegExp templateMatcher( "^Templates/\\{[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}\\}/.+" );
     QList<Template *> *templates = new QList<Template *>();
@@ -123,7 +123,7 @@ QList<Template *> * SettingsProvider::getLatexTemplates()
     while( iter != keys.end() )
     {
         QString key = (*iter);
-        qDebug() << "key: " << key;
+        debug() << "key: " << key;
 
         if( templateMatcher.exactMatch( key ))
         {
@@ -131,7 +131,7 @@ QList<Template *> * SettingsProvider::getLatexTemplates()
             if( ! templateUuids.contains( u ))
             {
                 templateUuids.append(u);
-                qDebug() << "    ---> adding template with uuid" << key.split( "/" ).at(1);
+                debug() << "    ---> adding template with uuid" << key.split( "/" ).at(1);
             }
         }
         iter++;
@@ -158,7 +158,7 @@ Template SettingsProvider::getLatexTemplate( const QString &name )
     // Special handling for the built-in template
     if( name.compare( "Built-in Template" ) == 0 )
     {
-        qDebug() << "SettingsProvider: Returning default template";
+        debug() << "SettingsProvider: Returning default template";
 
         Template t;
         t.setName( "Built-in Template" );

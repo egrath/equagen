@@ -2,6 +2,7 @@
 #define TEMPLATE_H
 
 #include <QtGui>
+#include "Debug.h"
 
 class Template : public QListWidgetItem
 {

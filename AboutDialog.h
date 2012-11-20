@@ -2,6 +2,7 @@
 #ifndef ABOUTDIALOG_H
 #define ABOUTDIALOG_H
 
+#include "Debug.h"
 #include "ui_AboutDialog.h"
 
 class AboutDialog : public QDialog

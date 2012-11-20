@@ -115,7 +115,7 @@ void MainWindow::switchToDocument( const QUuid &uuid )
         editor = ( DocumentEditor * ) tw->widget( index );
         if( editor->uuid() == uuid )
         {
-            qDebug() << "We already have the document with UUID open, switching to it.";
+            debug() << "We already have the document with UUID open, switching to it.";
             tw->setCurrentIndex( index );
             break;
         }
@@ -141,7 +141,7 @@ DocumentEditor * MainWindow::getDocumentTabForUuid( const QUuid &uuid )
 // Insert a new Document Editor Tab
 DocumentEditor * MainWindow::addDocumentTab( DocumentType type, const QString &name )
 {
-    qDebug() << "MainWindow::addDocumentTab";
+    debug() << "MainWindow::addDocumentTab";
 
     QTabWidget *tw = m_UserInterface->tabWidget;
 
@@ -157,7 +157,7 @@ DocumentEditor * MainWindow::addDocumentTab( DocumentType type, const QString &n
 
     // Append to Tab Widget
     int tabIndex = tw->count();
-    qDebug() << QString( "    Adding new Tab with Name %1 and ID %2" ).arg( name ).arg( tabIndex );
+    debug() << QString( "    Adding new Tab with Name %1 and ID %2" ).arg( name ).arg( tabIndex );
     tw->insertTab( tabIndex, editor, tabIcon, name );
 
     // Switch to this Tab
@@ -194,7 +194,7 @@ QString MainWindow::generateEmptyTabName()
 
 bool MainWindow::exportCurrentDocument( ImageType type )
 {
-    qDebug() << "MainWindow: Exporting ...";
+    debug() << "MainWindow: Exporting ...";
 
     static QString previousFolder = QDir( QDir::currentPath() ).dirName();
     QFileDialog saveAsDialog( this );
@@ -282,10 +282,10 @@ bool MainWindow::importDocument( DocumentImporter::ImportType type )
         switchToDocument( editor->uuid() );
     editor->setDocumentFromSource( importer->source() );
 
-    qDebug() << "Imported-Template: " << importer->source().Template;
-    qDebug() << "Imported-Source  : " << importer->source().Source;
-    qDebug() << "Imported-Type    : " << importer->source().Type;
-    qDebug() << "Imported-UUID    : " << importer->source().Uuid;
+    debug() << "Imported-Template: " << importer->source().Template;
+    debug() << "Imported-Source  : " << importer->source().Source;
+    debug() << "Imported-Type    : " << importer->source().Type;
+    debug() << "Imported-UUID    : " << importer->source().Uuid;
 
     // Compile the document
     buttonCompilePressed( false );
@@ -296,7 +296,7 @@ bool MainWindow::importDocument( DocumentImporter::ImportType type )
 // PRIVATE SLOTS
 void MainWindow::buttonCompilePressed( bool checked )
 {
-    qDebug() << "Compile button";
+    debug() << "Compile button";
 
     // Connect the signals to receive compilation step changes
     QObject::connect( m_ActiveDocument, SIGNAL(compilationStep(QString,int)),this,SLOT(compilationStep(QString,int)));
@@ -331,14 +331,14 @@ void MainWindow::buttonCompilePressed( bool checked )
 
 void MainWindow::buttonErrorLogPressed( bool checked )
 {
-    qDebug() << "Error Log button";
+    debug() << "Error Log button";
     m_ErrorLog->setMessage( m_ActiveDocument->compilerLog() );
     m_ErrorLog->show();
 }
 
 void MainWindow::buttonCopyClipboardPressed( bool checked )
 {
-    qDebug() << "Copy to clipboard button";
+    debug() << "Copy to clipboard button";
     m_ActiveDocument->copyImageToClipboard();
 }
 
@@ -346,16 +346,16 @@ void MainWindow::buttonCopyClipboardPressed( bool checked )
 // change the button states.
 void MainWindow::activeDocumentStatusChanged()
 {
-    qDebug() << QString( "MainWindow::activeDocumentStatusChanged: Document [%1] changed it's status" ).arg( m_ActiveDocument->name() );
+    debug() << QString( "MainWindow::activeDocumentStatusChanged: Document [%1] changed it's status" ).arg( m_ActiveDocument->name() );
     checkActiveDocumentStatus();
 }
 
 void MainWindow::tabCloseRequested( int index )
 {
-    qDebug() << "Close requested";
+    debug() << "Close requested";
 
     DocumentEditor *documentToClose = ( DocumentEditor * ) m_UserInterface->tabWidget->widget( index );
-    qDebug() << "    -> Tab Name: " << documentToClose->name();
+    debug() << "    -> Tab Name: " << documentToClose->name();
 
     // Remove the Tab - if it's the last tab we close, create a new one which is empty to replace
     // this last tab.
@@ -365,22 +365,22 @@ void MainWindow::tabCloseRequested( int index )
 
     if( tw->count() == 0 )
     {
-        qDebug() << "Creating new tab because last tab was closed by user";
+        debug() << "Creating new tab because last tab was closed by user";
         addDocumentTab( DT_LATEX, generateEmptyTabName() );
     }
 }
 
 void MainWindow::tabWidgetIndexChanged( int index )
 {
-    qDebug() << "Tab index changed to: " << index;
+    debug() << "Tab index changed to: " << index;
     if( index < 0 )
     {
-        qDebug() << "   -> negative, no tab open anymore";
+        debug() << "   -> negative, no tab open anymore";
         return;
     }
 
     m_ActiveDocument = ( DocumentEditor * ) m_UserInterface->tabWidget->currentWidget();
-    qDebug() << "Active Template for this editor: " << m_ActiveDocument->documentLatexTemplate().name();
+    debug() << "Active Template for this editor: " << m_ActiveDocument->documentLatexTemplate().name();
 
     // Connect to the active document's change status signal
     QObject::connect( m_ActiveDocument, SIGNAL(documentStatusChanged()), this, SLOT(activeDocumentStatusChanged()));
@@ -400,26 +400,26 @@ void MainWindow::menuFileQuitPressed( bool checked )
 
 void MainWindow::menuFileExportSvgPressed( bool checked )
 {
-    qDebug() << "MainWindow: Export as SVG";
+    debug() << "MainWindow: Export as SVG";
     exportCurrentDocument( IT_SVG );
 }
 
 void MainWindow::menuFileExportPngPressed( bool checked )
 {
-    qDebug() << "MainWindow: Export as PNG";
+    debug() << "MainWindow: Export as PNG";
     exportCurrentDocument( IT_PNG );
 }
 
 void MainWindow::menuFileImportPressed( bool checked )
 {
-    qDebug() << "MainWindow: Import document from file ";
+    debug() << "MainWindow: Import document from file ";
     importDocument( DocumentImporter::IT_FILE );
 }
 
 void MainWindow::menuEditPastePressed( bool checked )
 {
     // Pasting document from clipboard if supported
-    qDebug() << "MainWindow: Import document from clipboard";
+    debug() << "MainWindow: Import document from clipboard";
     importDocument( DocumentImporter::IT_CLIPBOARD );
 }
 
@@ -438,43 +438,43 @@ void MainWindow::menuEditOptionsPressed( bool checked )
 
 void MainWindow::menuViewZoomInPressed( bool checked )
 {
-    qDebug() << "Preview zoom in";
+    debug() << "Preview zoom in";
 
     qreal currentScale = m_ActiveDocument->zoomIn();
-    qDebug() << "   new scale: " << currentScale;
+    debug() << "   new scale: " << currentScale;
 }
 
 void MainWindow::menuViewZoomOutPressed( bool checked )
 {
-    qDebug() << "Preview zoom out";
+    debug() << "Preview zoom out";
 
     qreal currentScale = m_ActiveDocument->zoomOut();
-    qDebug() << "   new scale: " << currentScale;
+    debug() << "   new scale: " << currentScale;
 }
 
 void MainWindow::menuViewZoomOriginalPressed( bool checked )
 {
-    qDebug() << "Preview zoom normal";
+    debug() << "Preview zoom normal";
 
     qreal currentScale = m_ActiveDocument->zoomNormal();
-    qDebug() << "   new scale: " << currentScale;
+    debug() << "   new scale: " << currentScale;
 }
 
 void MainWindow::menuAddLatexDocumentPressed()
 {
-    qDebug() << "MainWindow: Adding LaTeX Document Tab";
+    debug() << "MainWindow: Adding LaTeX Document Tab";
     addDocumentTab( DT_LATEX, generateEmptyTabName() );
 }
 
 void MainWindow::menuAddSketchDocumentPressed()
 {
-    qDebug() << "MainWindow: Adding Sketch Document Tab";
+    debug() << "MainWindow: Adding Sketch Document Tab";
     addDocumentTab( DT_SKETCH, generateEmptyTabName() );
 }
 
 void MainWindow::menuHelpAboutPressed( bool checked )
 {
-    qDebug() << "MainWindow: Showing About dialog";
+    debug() << "MainWindow: Showing About dialog";
 
     AboutDialog aboutDialog( this );
     aboutDialog.exec();
@@ -498,7 +498,7 @@ void MainWindow::toolbarCopyModeSelectorIndexChanged( const QString &copyMode )
 void MainWindow::toolbarTemplateSelectorIndexChanged(const QString &templateName)
 {
     Template t = m_Settings->getLatexTemplate( templateName );
-    qDebug() << t.code();
+    debug() << t.code();
 
     m_ActiveDocument->setDocumentLatexTemplate( t );
 }
@@ -580,7 +580,7 @@ void MainWindow::setStatusMessage( bool enabled, const QString &message, const Q
 
 void MainWindow::compilationStep(const QString &message, int step)
 {
-    qDebug() << "MainWindow::compilationStep";
+    debug() << "MainWindow::compilationStep";
     m_ProgressIndicator->setStatus( message, step );
 }
 

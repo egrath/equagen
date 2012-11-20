@@ -4,6 +4,7 @@
 #include <QByteArray>
 #include <QString>
 
+#include "Debug.h"
 #include "OriginalSource.h"
 
 enum ImageType

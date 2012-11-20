@@ -6,7 +6,7 @@ SvgImage::SvgImage( const QByteArray &content ) : BaseImage( content )
 
 void SvgImage::setOriginalSource(const OriginalSource &source)
 {
-    qDebug() << "SvgImage::setOriginalSource";
+    debug() << "SvgImage::setOriginalSource";
 
     QDomDocument document;
     document.setContent( *rawContent(), false );

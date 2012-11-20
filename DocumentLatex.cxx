@@ -2,7 +2,7 @@
 
 DocumentLatex::DocumentLatex(const QString &name, const QString &initial) : Document( name, initial )
 {
-    qDebug() << "DocumentLatex::ctor()";
+    debug() << "DocumentLatex::ctor()";
 
     setDocumentType( DT_LATEX );
     loadTexTemplateFromFile( ":/templates/latex.template" );
@@ -10,12 +10,12 @@ DocumentLatex::DocumentLatex(const QString &name, const QString &initial) : Docu
 
 DocumentLatex::~DocumentLatex()
 {
-    qDebug() << "DocumentLatex::dtor()";
+    debug() << "DocumentLatex::dtor()";
 }
 
 void DocumentLatex::setTexTemplate( const QString &templ )
 {
-    qDebug() << "DocumentLatex: Setting new LaTeX template";
+    debug() << "DocumentLatex: Setting new LaTeX template";
     m_TexTemplate = templ;
 }
 
@@ -35,7 +35,7 @@ void DocumentLatex::loadTexTemplateFromFile( const QString &fileName )
 
 bool DocumentLatex::compile()
 {
-    qDebug() << "Document::compile";
+    debug() << "Document::compile";
 
     // Create original source structure
     OriginalSource source;
@@ -59,9 +59,9 @@ bool DocumentLatex::compile()
     texFile.write( cont.toStdString().c_str() );
     texFile.close();
 
-    qDebug() << "----------- TEX FILE START --------------";
-    qDebug() << cont;
-    qDebug() << "----------- TEX FILE END ----------------";
+    debug() << "----------- TEX FILE START --------------";
+    debug() << cont;
+    debug() << "----------- TEX FILE END ----------------";
 
     // Compile LaTeX to DVI
     emit compilationStep( "Compiling LaTex", 40 );

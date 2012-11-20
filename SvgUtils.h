@@ -6,6 +6,7 @@
 #include <QDomDocument>
 
 #include "OriginalSource.h"
+#include "Debug.h"
 
 class SvgUtils
 {

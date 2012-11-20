@@ -7,6 +7,7 @@
 
 #include "ui_TemplateEditor.h"
 
+#include "Debug.h"
 #include "SettingsProvider.h"
 
 class TemplateEditor : public QDialog

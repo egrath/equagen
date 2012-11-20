@@ -2,6 +2,7 @@
 #define PROGRESSINDICATOR_H
 
 #include <QDebug>
+#include "Debug.h"
 #include "ui_ProgressIndicator.h"
 
 class ProgressIndicator : public QWidget

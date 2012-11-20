@@ -4,6 +4,7 @@
 #define ERRORLOG_H
 
 #include <QtGui>
+#include "Debug.h"
 #include "ui_ErrorLog.h"
 
 class ErrorLog : public QWidget

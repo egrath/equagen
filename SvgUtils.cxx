@@ -2,7 +2,7 @@
 
 QByteArray * SvgUtils::rasterSvgToPng( const QByteArray &data, qreal scale )
 {
-    qDebug() << "SvgUtils::rasterSvgToPng with scale " << scale;
+    debug() << "SvgUtils::rasterSvgToPng with scale " << scale;
 
     QSvgRenderer renderer( data );
     QImage image( QSize( renderer.viewBoxF().width() * scale + 4, renderer.viewBoxF().height() * scale + 4 ),
@@ -41,10 +41,10 @@ OriginalSource SvgUtils::extractOriginalSource(QDomDocument &document)
 
     OriginalSource source;
     if( foundMetadata )
-        qDebug() << "found metadata";
+        debug() << "found metadata";
     else
     {
-        qDebug() << "No metadata";
+        debug() << "No metadata";
         return source;
     }
 

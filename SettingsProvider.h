@@ -7,6 +7,7 @@
 #include <QRegExp>
 
 #include "Template.h"
+#include "Debug.h"
 
 class SettingsProvider : public QObject
 {

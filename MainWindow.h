@@ -10,6 +10,7 @@
 #include "ProgressIndicator.h"
 #include "AboutDialog.h"
 #include "MathSyms.h"
+#include "Debug.h"
 
 #include "ui_MainWindow.h"
 

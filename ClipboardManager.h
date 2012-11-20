@@ -1,6 +1,7 @@
 #ifndef CLIPBOARDMANAGER_H
 #define CLIPBOARDMANAGER_H
 
+#include "Debug.h"
 #include <QClipboard>
 
 enum ClipboardCopyType

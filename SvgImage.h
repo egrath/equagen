@@ -9,6 +9,7 @@
 
 #include "BaseImage.h"
 #include "SvgUtils.h"
+#include "Debug.h"
 
 class SvgImage : public BaseImage
 {

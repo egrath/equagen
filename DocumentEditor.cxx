@@ -1,4 +1,5 @@
-﻿#include "DocumentEditor.h"
+﻿#pragma GCC diagnostic ignored "-Wunused-parameter"
+#include "DocumentEditor.h"
 
 void DocumentEditor::setupUserInterface()
 {
@@ -30,7 +31,7 @@ void DocumentEditor::setupSplitterPane()
         QFontMetrics fontMetric( m_UserInterface->textEditTex->font() );
         int charWidth = fontMetric.width( 'A' );
 
-        qDebug() << "DocumentEditor: Setting Text Editor width to " << charWidth * 30 << " because one char is " << charWidth << " pixels wide";
+        debug() << "DocumentEditor: Setting Text Editor width to " << charWidth * 30 << " because one char is " << charWidth << " pixels wide";
         m_TextEditorWidth = charWidth * 30;
     }
 
@@ -94,13 +95,13 @@ void DocumentEditor::previewScrollerVerticalBarMoved(int value )
     else
         m_PreviewAutoscroll = true;
 
-    qDebug() << "DocumentEditor::previewScrollerVerticalBarMoved: Autoscroll = " << m_PreviewAutoscroll;
+    debug() << "DocumentEditor::previewScrollerVerticalBarMoved: Autoscroll = " << m_PreviewAutoscroll;
 }
 
 // Event handler for SettingsProvider, called when the settings have changed
 void DocumentEditor::configurationSettingsChanged()
 {
-    qDebug() << "DocumentEditor: configuration settings changed";
+    debug() << "DocumentEditor: configuration settings changed";
 }
 
 // Event handler for document compilation status changed
@@ -112,14 +113,14 @@ void DocumentEditor::compilationStepHandler(const QString &message, int step)
 // Splitter pane handle moved
 void DocumentEditor::splitterPaneHandleMoved(int pos, int index)
 {
-    qDebug() << "Splitter pane moved to pos: " << pos;
+    debug() << "Splitter pane moved to pos: " << pos;
     m_TextEditorWidth = pos;
 }
 
 // PROTECTED
 void DocumentEditor::showEvent( QShowEvent *event )
 {
-    qDebug() << "DocumentEditor::showEvent";
+    debug() << "DocumentEditor::showEvent";
     QWidget::showEvent( event );
 
     //setupSplitterPane();
@@ -127,7 +128,7 @@ void DocumentEditor::showEvent( QShowEvent *event )
 
 void DocumentEditor::resizeEvent( QResizeEvent *event )
 {
-    qDebug() << "DocumentEditor::resizeEvent to " << event->size();
+    debug() << "DocumentEditor::resizeEvent to " << event->size();
     QWidget::resizeEvent( event );
 
     setupSplitterPane();
@@ -148,7 +149,7 @@ void DocumentEditor::copyImageToClipboard() const
     switch( m_ClipboardCopyType )
     {
     case CCT_SVG:
-        qDebug() << "Copying SVG to clipboard ...";
+        debug() << "Copying SVG to clipboard ...";
 
         mimeData = new QMimeData();
         mimeData->setData( "image/svg+xml", *( m_Document->svgImage().rawContent() ));
@@ -156,14 +157,14 @@ void DocumentEditor::copyImageToClipboard() const
         break;
 
     case CCT_PNG:
-        qDebug() << "Copying PNG to clipboard ...";
+        debug() << "Copying PNG to clipboard ...";
 
         clipboardImage = preparePngImageForClipboard();
         clip->setImage( clipboardImage );
         break;
 
     case CCT_CODE:
-        qDebug() << "Copying plain code to clipboard ...";
+        debug() << "Copying plain code to clipboard ...";
 
         clip->setText( m_Document->plainContent() );
         break;
@@ -185,7 +186,7 @@ DocumentEditor::DocumentEditor( DocumentType type, const QString &name, const QS
     }
     catch( QString *msg )
     {
-        qDebug() << "Exception: " << *msg;
+        debug() << "Exception: " << *msg;
     }
 
     m_Document->setName( name );
@@ -233,7 +234,7 @@ bool DocumentEditor::compile()
     // Check for errors
     if( compiler.finishedWithError() )
     {
-        qDebug() << "Compiler error message: " << compiler.compilerErrorMessage();
+        debug() << "Compiler error message: " << compiler.compilerErrorMessage();
 
         QMessageBox errorBox( QMessageBox::Critical, "Compilation failed", "Compilation failed, check log",
                               QMessageBox::Ok );
@@ -322,7 +323,7 @@ void DocumentEditor::setClipboardCopyMode( ClipboardCopyType type )
 {
     m_ClipboardCopyType = type;
 
-    qDebug() << "Document Editor: setting new copy mode to: " << type;
+    debug() << "Document Editor: setting new copy mode to: " << type;
 }
 
 const ClipboardCopyType & DocumentEditor::clipboardCopyMode() const

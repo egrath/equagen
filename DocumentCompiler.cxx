@@ -2,7 +2,7 @@
 
 DocumentCompiler::DocumentCompiler( Document *document )
 {
-    qDebug() << "DocumentCompiler::ctor()";
+    debug() << "DocumentCompiler::ctor()";
 
     m_Document = document;
     m_FinishedWithError = false;
@@ -23,7 +23,7 @@ const QString & DocumentCompiler::compilerErrorMessage() const
 
 void DocumentCompiler::run()
 {
-    qDebug() << "DocumentCompiler::run()";
+    debug() << "DocumentCompiler::run()";
 
     try
     {
@@ -42,7 +42,7 @@ void DocumentCompiler::run()
 
 void DocumentCompiler::compilationStepHandler(const QString &message, int step)
 {
-    qDebug() << "DocumentCompiler::compilationStep: " << message << " : " << step;
+    debug() << "DocumentCompiler::compilationStep: " << message << " : " << step;
 
     // Reemit
     emit compilationStep( message, step );

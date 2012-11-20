@@ -8,6 +8,7 @@
 #include "DocumentFactory.h"
 #include "DocumentCompiler.h"
 #include "Template.h"
+#include "Debug.h"
 
 #include "ui_DocumentEditor.h"
 

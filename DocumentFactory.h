@@ -3,6 +3,7 @@
 
 #include <QtGui>
 
+#include "Debug.h"
 #include "Document.h"
 #include "DocumentLatex.h"
 

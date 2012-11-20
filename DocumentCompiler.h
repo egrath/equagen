@@ -3,6 +3,7 @@
 
 #include <QtCore>
 
+#include "Debug.h"
 #include "Document.h"
 
 class DocumentCompiler : public QThread

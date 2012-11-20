@@ -7,6 +7,7 @@
 #include <QUrl>
 #include <QDomDocument>
 
+#include "Debug.h"
 #include "Document.h"
 #include "OriginalSource.h"
 

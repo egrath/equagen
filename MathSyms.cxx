@@ -10,11 +10,11 @@ void MathSyms::setupUserInterface()
 // PUBLIC
 MathSyms::MathSyms( QWidget *parent ) : QWidget( parent )
 {
-    qDebug() << "MathSyms::ctor()";
+    debug() << "MathSyms::ctor()";
     setupUserInterface();
 }
 
 MathSyms::~MathSyms()
 {
-    qDebug() << "MathSyms::dtor()";
+    debug() << "MathSyms::dtor()";
 }

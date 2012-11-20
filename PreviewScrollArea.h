@@ -5,6 +5,7 @@
 #include <QWheelEvent>
 #include <QScrollArea>
 
+#include "Debug.h"
 #include "Renderer.h"
 
 // Used to catch the Mouse wheel area

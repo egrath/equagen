@@ -2,6 +2,7 @@
 #ifndef DOCUMENTLATEX_H
 #define DOCUMENTLATEX_H
 
+#include "Debug.h"
 #include "Document.h"
 
 class DocumentLatex : public Document

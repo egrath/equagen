@@ -3,7 +3,7 @@
 // PRIVATE
 bool DocumentImporter::parsePng()
 {
-    qDebug() << "DocumentImporter: Parsing PNG";
+    debug() << "DocumentImporter: Parsing PNG";
 
     QImage *img;
     if( m_ImportType == IT_FILE )
@@ -15,7 +15,7 @@ bool DocumentImporter::parsePng()
             img = new QImage( QImage::fromData( mime->data( "image/png" )));
         else
         {
-            qDebug() << "Failed to parse Image data from clipboard";
+            debug() << "Failed to parse Image data from clipboard";
             return false;
         }
     }
@@ -35,7 +35,7 @@ bool DocumentImporter::parsePng()
 
 bool DocumentImporter::parseSvg()
 {
-    qDebug() << "DocumentImporter: Parsing SVG";
+    debug() << "DocumentImporter: Parsing SVG";
 
     QDomDocument document;
 
@@ -55,7 +55,7 @@ bool DocumentImporter::parseSvg()
             document.setContent( mime->data( "image/svg+xml" ));
         else
         {
-            qDebug() << "Failed to get SVG from clipboard";
+            debug() << "Failed to get SVG from clipboard";
             return false;
         }
     }
@@ -74,7 +74,7 @@ bool DocumentImporter::parseSvg()
 // Constructor for import from Clipboard
 DocumentImporter::DocumentImporter()
 {
-    qDebug() << "DocumentImporter: Importing from Clipboard";
+    debug() << "DocumentImporter: Importing from Clipboard";
     m_File = "CLIPBOARD";
     m_ImportType = IT_CLIPBOARD;
 }
@@ -82,7 +82,7 @@ DocumentImporter::DocumentImporter()
 // Constructor for import from File
 DocumentImporter::DocumentImporter(const QString &fileName)
 {
-    qDebug() << "DocumentImporter: Importing from File";
+    debug() << "DocumentImporter: Importing from File";
     m_ImportType = IT_FILE;
     m_File = fileName;
 }
@@ -110,7 +110,7 @@ bool DocumentImporter::parse()
         else if( mime->hasFormat( "image/png" ))
             m_IsValid = parsePng();
         else
-            qDebug() << "Invalid mime format in clipboard";
+            debug() << "Invalid mime format in clipboard";
     }
 
     return m_IsValid;

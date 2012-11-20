@@ -73,7 +73,7 @@ void SettingsDialog::refreshTemplateList()
 
     while( iter != templates->end() )
     {
-        qDebug() << "SettingsDialog: Adding Template to list:" << (*iter)->text();
+        debug() << "SettingsDialog: Adding Template to list:" << (*iter)->text();
         templateList->addItem( (*iter));
         iter++;
     }
@@ -83,7 +83,7 @@ void SettingsDialog::refreshTemplateList()
 
 void SettingsDialog::buttonTemplateNewPressed()
 {
-    qDebug() << "Showing Template Editor with empty template";
+    debug() << "Showing Template Editor with empty template";
 
     TemplateEditor *templateEditor = new TemplateEditor();
 
@@ -103,7 +103,7 @@ void SettingsDialog::buttonTemplateNewPressed()
 
 void SettingsDialog::buttonTemplateEditPressed()
 {
-    qDebug() << "Editing template";
+    debug() << "Editing template";
 
     QListWidget *templateList = m_UserInterface->templateList;
     Template *t = ( Template * ) templateList->selectedItems().at(0);
@@ -129,7 +129,7 @@ void SettingsDialog::buttonTemplateEditPressed()
 void SettingsDialog::buttonTemplateRemovePressed()
 {
     Template *t = ( Template *) m_UserInterface->templateList->selectedItems().at( 0 );
-    qDebug() << "Removing template: " << t->name();
+    debug() << "Removing template: " << t->name();
 
     m_Settings->delLatexTemplate( *t );
     refreshTemplateList();
@@ -137,7 +137,7 @@ void SettingsDialog::buttonTemplateRemovePressed()
 
 void SettingsDialog::buttonBrowseLatexPressed()
 {
-    qDebug() << "Browse for Latex Binary";
+    debug() << "Browse for Latex Binary";
 
     QString newBinary = showFileOpenDialog( m_UserInterface->textEditLatex->text() );
     if( newBinary.length() > 0 )
@@ -146,7 +146,7 @@ void SettingsDialog::buttonBrowseLatexPressed()
 
 void SettingsDialog::buttonBrowseDvisvgmPressed()
 {
-    qDebug() << "Browse for DviSvgm Binary";
+    debug() << "Browse for DviSvgm Binary";
 
     QString newBinary = showFileOpenDialog( m_UserInterface->textEditDvisvgm->text() );
     if( newBinary.length() > 0 )
@@ -155,17 +155,17 @@ void SettingsDialog::buttonBrowseDvisvgmPressed()
 
 void SettingsDialog::buttonTextColorPressed()
 {
-    qDebug() << "SettingsDialog: buttonTextColorPressed";
+    debug() << "SettingsDialog: buttonTextColorPressed";
 }
 
 void SettingsDialog::buttonBackgroundColorPressed()
 {
-    qDebug() << "SettingsDialog: buttonBackgroundColorPressed";
+    debug() << "SettingsDialog: buttonBackgroundColorPressed";
 }
 
 void SettingsDialog::buttonSavePressed()
 {
-    qDebug() << "Save";
+    debug() << "Save";
 
     m_Settings->setLatexBinary( m_UserInterface->textEditLatex->text() );
     m_Settings->setDvisvgmBinary( m_UserInterface->textEditDvisvgm->text() );
@@ -173,9 +173,9 @@ void SettingsDialog::buttonSavePressed()
                                m_UserInterface->comboBoxFontSize->itemText( m_UserInterface->comboBoxFontSize->currentIndex() ).toInt() );
 
 
-    qDebug() << "    latex: " << m_Settings->latexBinary();
-    qDebug() << "    dvisvgm: " << m_Settings->dvisvgmBinary();   
-    qDebug() << "    font: " << m_Settings->editorFont();
+    debug() << "    latex: " << m_Settings->latexBinary();
+    debug() << "    dvisvgm: " << m_Settings->dvisvgmBinary();   
+    debug() << "    font: " << m_Settings->editorFont();
 
     // Set dirty, so that the corresponding signal is emitted and all subscribers
     // change their settings according to the new values
@@ -186,7 +186,7 @@ void SettingsDialog::buttonSavePressed()
 
 void SettingsDialog::buttonCancelPressed()
 {
-    qDebug() << "Cancel";
+    debug() << "Cancel";
     close();
 }
 

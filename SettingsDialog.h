@@ -9,6 +9,8 @@
 #include "SettingsProvider.h"
 #include "TemplateEditor.h"
 #include "Template.h"
+#include "Debug.h"
+
 #include "ui_SettingsDialog.h"
 
 class SettingsDialog : public QDialog

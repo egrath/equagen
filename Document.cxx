@@ -34,7 +34,7 @@ Document::Document( const QString &name, const QString &initial )
 
     // Generate a uuid for this document
     m_Uuid = QUuid::createUuid();
-    qDebug() << "Document with Name: " << name << " has the UUID: " << m_Uuid.toString();
+    debug() << "Document with Name: " << name << " has the UUID: " << m_Uuid.toString();
 
     // Set document to invalid type initially
     setDocumentType( DT_INVALID );
@@ -48,7 +48,7 @@ void Document::setPlainContent( const QString &content )
 {
     m_PlainContent = content;
 
-    qDebug() << "Document::setPlainContent";
+    debug() << "Document::setPlainContent";
 }
 
 const QString & Document::plainContent() const
@@ -84,7 +84,7 @@ const SvgImage & Document::svgImage() const
 void Document::setUuid( const QUuid &uuid )
 {
     m_Uuid = uuid;
-    qDebug() << "Document with Name [" << m_Name << "] changed it's UUID to: " << m_Uuid;
+    debug() << "Document with Name [" << m_Name << "] changed it's UUID to: " << m_Uuid;
 }
 
 const QUuid & Document::uuid() const

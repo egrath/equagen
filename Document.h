@@ -16,6 +16,7 @@
 #include "SvgImage.h"
 #include "SvgUtils.h"
 #include "PngImage.h"
+#include "Debug.h"
 
 enum DocumentType
 {

@@ -2,6 +2,7 @@
 #define MATHSYMS_H
 
 #include <QtGui>
+#include "Debug.h"
 
 class MathSyms : public QWidget
 {

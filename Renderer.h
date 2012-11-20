@@ -4,6 +4,7 @@
 #include <QtGui>
 #include <QtSvg>
 
+#include "Debug.h"
 #include "SvgImage.h"
 #include "SettingsProvider.h"
 

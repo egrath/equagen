@@ -1,4 +1,5 @@
-﻿#include "Renderer.h"
+﻿#pragma GCC diagnostic ignored "-Wunused-parameter"
+#include "Renderer.h"
 
 void Renderer::init()
 {
@@ -37,7 +38,7 @@ void Renderer::setImage( const SvgImage &image )
 // configurable
 void Renderer::setScale( const qreal &scale )
 {
-    qDebug() << "Renderer::setScale: to " << scale;
+    debug() << "Renderer::setScale: to " << scale;
     m_Scale = scale;
 
     // Set new size of our rendering
@@ -45,10 +46,10 @@ void Renderer::setScale( const qreal &scale )
     this->setMaximumSize( m_Renderer.viewBoxF().width() * m_Scale + 16, m_Renderer.viewBoxF().height() * m_Scale + 16 );
     this->resize( m_Renderer.viewBoxF().width() * m_Scale + 4, m_Renderer.viewBoxF().height() * m_Scale + 4 );
 
-    qDebug() << "Renderer: got new image to render with dimension of " << m_Renderer.viewBoxF().width() << " x " << m_Renderer.viewBoxF().height() << "(excluding scale of " << m_Scale << ")";
-    qDebug() << "    final rendering size is: " << m_Renderer.viewBoxF().width() * m_Scale << " x " << m_Renderer.viewBoxF().height() * m_Scale;
-    qDebug() << "    minimum widget size: " << this->minimumSize();
-    qDebug() << "    maximum widget size: " << this->maximumSize();
+    debug() << "Renderer: got new image to render with dimension of " << m_Renderer.viewBoxF().width() << " x " << m_Renderer.viewBoxF().height() << "(excluding scale of " << m_Scale << ")";
+    debug() << "    final rendering size is: " << m_Renderer.viewBoxF().width() * m_Scale << " x " << m_Renderer.viewBoxF().height() * m_Scale;
+    debug() << "    minimum widget size: " << this->minimumSize();
+    debug() << "    maximum widget size: " << this->maximumSize();
 
     // Redraw
     repaint();
@@ -88,7 +89,7 @@ void Renderer::paintEvent( QPaintEvent *event )
 
 void Renderer::resizeEvent( QResizeEvent *event )
 {
-    qDebug() << "Renderer: got resize to: " << event->size() << " (excluding scale of " << m_Scale << ")";
+    debug() << "Renderer: got resize to: " << event->size() << " (excluding scale of " << m_Scale << ")";
     QWidget::resizeEvent( event );
 }
 

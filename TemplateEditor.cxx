@@ -49,12 +49,12 @@ void TemplateEditor::buttonSaveAndExitPressed()
 
 void TemplateEditor::buttonLoadDefaultPressed()
 {
-    qDebug() << "Loading default LaTeX template into editor";
+    debug() << "Loading default LaTeX template into editor";
 
     QFile defaultTemplate( ":/templates/latex.template" );
     defaultTemplate.open( QFile::ReadOnly );
 
-    qDebug() << defaultTemplate.size();
+    debug() << defaultTemplate.size();
     m_UserInterface->textEditCode->setPlainText( QString( defaultTemplate.readAll() ));
 
     defaultTemplate.close();

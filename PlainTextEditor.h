@@ -3,6 +3,7 @@
 
 #include <QtGui>
 #include "SettingsProvider.h"
+#include "Debug.h"
 
 class PlainTextEditor : public QPlainTextEdit
 {
