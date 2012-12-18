@@ -1,0 +1,89 @@
+;
+; NSIS Installer for equagen
+;
+
+; Variables
+var AppBuildVersion
+
+;
+; General options
+;
+
+Name "equagen"
+OutFile "install.exe"
+InstallDir $PROGRAMFILES32\equagen
+Caption "equagen Installer"
+UninstallCaption "equagen Uninstaller"
+LicenseBkColor ffffff
+InstallColors 000000 FFFFFF
+BrandingText " "
+XPStyle on
+CRCCheck force
+WindowIcon off
+AllowSkipFiles off
+
+;SetCompress Off
+SetCompressor bzip2
+
+;
+; Pages
+;
+
+PageEx license
+    Caption " - License agreement"
+    
+    LicenseText "This software is released under the Terms of the GPL, version 3 or higher. Please read it below if you are not sure what this means"
+    LicenseData gpl.txt
+PageExEnd
+
+PageEx directory
+    Caption " - Choose destination"
+PageExEnd
+
+PageEx instfiles
+    Caption " - Installing"
+PageExEnd
+
+
+UninstPage uninstConfirm
+UninstPage instfiles
+
+Section "equagen" 
+    SetOutPath $INSTDIR
+    File "..\build\win32\release\equagen.exe"
+    File "..\build\win32\release\Qt*.dll"
+    
+    ; Uninstaller
+    WriteUninstaller "uninstall.exe"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\equagen" "DisplayName" "equagen"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\equagen" "DisplayVersion" "$AppBuildVersion"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\equagen" "UninstallString" '"$INSTDIR\uninstall.exe"'
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\equagen" "Publisher" "Egon A. Rath"
+    WriteRegStr HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\equagen" "Size" "15"
+    WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\equagen" "NoModify" 1
+    WriteRegDWORD HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\equagen" "NoRepair" 1
+    
+    ; Shortcut in Start Menu/Metro
+    CreateShortCut "$SMPROGRAMS\equagen\equagen.lnk" "$INSTDIR\equagen.exe"
+SectionEnd
+
+Section "Uninstall"
+    Delete "$INSTDIR\uninstall.exe"
+    Delete "$INSTDIR\equagen.exe"
+    Delete "$INSTDIR\Qt*.dll"
+    RMDir "$INSTDIR"
+    
+    ; Remove uninstaller from registry
+     DeleteRegKey HKLM "Software\Microsoft\Windows\CurrentVersion\Uninstall\equagen"
+SectionEnd
+
+;
+; Functions
+;
+Function .onInit
+    strcpy $AppBuildVersion "R50"
+    MessageBox MB_YESNO "This will install equagen $AppBuildVersion" /SD IDYES IDYES cont
+    Quit
+cont:
+
+FunctionEnd
