@@ -25,7 +25,9 @@ win32 {
         CONFIG -= console
     }
 
-    CONFIG -= console
+    # Window icon
+    RC_FILE = equagen.rc
+    CONFIG -= console    
 }
 
 CONFIG += exceptions
@@ -102,4 +104,5 @@ RESOURCES += \
 
 OTHER_FILES += \
     templates/latex.template \
-    templates/mathsyms.txt
+    templates/mathsyms.txt \
+    equagen.rc

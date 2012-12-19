@@ -16,7 +16,7 @@
         <file alias="sketch-symbol.svg">extlib/elementary/mimes/48/x-office-drawing.svg</file>
         <file alias="import-document.svg">extlib/elementary/actions/48/document-import.svg</file>
         <file alias="edit-paste.svg">extlib/tango-icon-theme-0.8.90/scalable/actions/edit-paste.svg</file>
-        <file>applogo.png</file>
+        <file alias="applogo.png">logo/equagen-logo-256.png</file>        
     </qresource>
     <qresource prefix="/templates">
         <file alias="latex.template">templates/latex.template</file>
