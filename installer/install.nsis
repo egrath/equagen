@@ -22,6 +22,9 @@ CRCCheck force
 WindowIcon off
 AllowSkipFiles off
 
+Icon ..\logo\equagen-logo.ico
+UninstallIcon ..\logo\equagen-logo.ico
+
 ;SetCompress Off
 SetCompressor bzip2
 
@@ -81,7 +84,7 @@ SectionEnd
 ; Functions
 ;
 Function .onInit
-    strcpy $AppBuildVersion "R50"
+    strcpy $AppBuildVersion "R54"
     MessageBox MB_YESNO "This will install equagen $AppBuildVersion" /SD IDYES IDYES cont
     Quit
 cont:
